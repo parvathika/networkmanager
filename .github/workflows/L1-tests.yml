@@ -177,11 +177,11 @@ jobs:
         if: ${{ matrix.compiler == 'gcc' && matrix.coverage == 'with-coverage' && !env.ACT }}
         run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/gcc-with-coverage.cmake" >> $GITHUB_ENV
 
-      - name: Build NetworkManager
+      - name: Build networkmanager with RDK Proxy
         run: >
           cmake
           -S "${{github.workspace}}/networkmanager"
-          -B build/networkmanager
+          -B build/RDKNetworkmanager
           -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
@@ -199,6 +199,33 @@ jobs:
           -DENABLE_NETWORKMANAGER_UNIT_TEST=ON
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           &&
-          cmake --build build/networkmanager -j16
+          cmake --build build/RDKNetworkmanager -j16
           &&
-          cmake --install build/networkmanager
+          cmake --install build/RDKNetworkmanager
+
+      - name: Build networkmanager with Gnome Proxy
+        run: >
+          cmake
+          -S "${{github.workspace}}/networkmanager"
+          -B build/GnomeNetworkmanager
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
+          -DCMAKE_CXX_FLAGS="
+          -fprofile-arcs
+          -ftest-coverage
+          -DEXCEPTIONS_ENABLE=ON
+          -I ${{github.workspace}}/networkmanagerTests/headers
+          -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
+          -I ${{github.workspace}}/networkmanager/Tests/headers/network
+          -Wall -Wno-error=format=
+          -Wl,-wrap,system -Wl,-wrap,popen -Wl,-wrap,syslog"
+          -DCMAKE_DISABLE_FIND_PACKAGE_IARMBus=ON
+          -DENABLE_GNOME_NETWORKMANAGER=ON
+          -DENABLE_NETWORKMANAGER_UNIT_TEST=OFF
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          &&
+          cmake --build build/GnomeNetworkmanager -j16
+          &&
+          cmake --install build/GnomeNetworkmanager
+
