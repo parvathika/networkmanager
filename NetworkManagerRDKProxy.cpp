@@ -445,6 +445,7 @@ namespace WPEFramework
                                 ::_instance->ReportInterfaceStateChangedEvent(Exchange::INetworkManager::INTERFACE_ADDED, interface);
                             else
                                 ::_instance->ReportInterfaceStateChangedEvent(Exchange::INetworkManager::INTERFACE_REMOVED, interface);
+                            activeIfaceCache.reset();
                         }
                         break;
                     }
@@ -458,6 +459,7 @@ namespace WPEFramework
                                 ::_instance->ReportInterfaceStateChangedEvent(Exchange::INetworkManager::INTERFACE_LINK_UP, interface);
                             else
                                ::_instance->ReportInterfaceStateChangedEvent(Exchange::INetworkManager::INTERFACE_LINK_DOWN, interface);
+                            activeIfaceCache.reset();
                         }
                         break;
                     }
@@ -523,6 +525,7 @@ namespace WPEFramework
                         state = to_wifi_state(e->data.wifiStateChange.state);
                         WiFiStateCache = state;
                         ::_instance->ReportWiFiStateChangedEvent(state);
+                        activeIfaceCache.reset();
                         break;
                     }
                     case IARM_BUS_WIFI_MGR_EVENT_onError:
@@ -833,15 +836,15 @@ namespace WPEFramework
             //TODO: Fix netsrvmgr to accept eth0 & wlan0
 
             // Convert the string to uppercase
-            std::string ipversionNonConst = ipversion;
-            std::transform(ipversionNonConst.begin(), ipversionNonConst.end(), ipversionNonConst.begin(), ::toupper);
+            std::string ipversionTmp = ipversion;
+            std::transform(ipversionTmp.begin(), ipversionTmp.end(), ipversionTmp.begin(), ::toupper);
 
             if ("wlan0" == interface)
                 strncpy(iarmData.interface, "WIFI", INTERFACE_SIZE);
             else if ("eth0" == interface)
                 strncpy(iarmData.interface, "ETHERNET", INTERFACE_SIZE);
 
-            strncpy(iarmData.ipversion, ipversionNonConst.c_str(), 16);
+            strncpy(iarmData.ipversion, ipversionTmp.c_str(), 16);
             iarmData.isSupported = true;
             if ("wlan0" == interface && WiFiStateCache.isSet() && WiFiStateCache.getValue() != Exchange::INetworkManager::WIFI_STATE_CONNECTED)
             {
@@ -849,13 +852,13 @@ namespace WPEFramework
                 NMLOG_WARNING("wifi not connected so address will be empty");
                 rc = Core::ERROR_NONE;
             }
-            else if(ipversionNonConst == "IPV4" && ipv4Cache.isSet() && interface == activeIfaceCache.getValue())
+            else if(ipversionTmp == "IPV4" && ipv4Cache.isSet() && interface == activeIfaceCache.getValue())
             {
                 NMLOG_INFO("Reading ipv4 cached value");
                 result = ipv4Cache.getValue();
                 rc = Core::ERROR_NONE;
             }
-            else if(ipversionNonConst == "IPV6" && ipv6Cache.isSet() && interface == activeIfaceCache.getValue())
+            else if(ipversionTmp == "IPV6" && ipv6Cache.isSet() && interface == activeIfaceCache.getValue())
             {
                 NMLOG_INFO("Reading ipv6 cached value");
                 result = ipv4Cache.getValue();
@@ -866,31 +869,27 @@ namespace WPEFramework
                 if (IARM_RESULT_SUCCESS == IARM_Bus_Call (IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETSRVMGR_API_getIPSettings, (void *)&iarmData, sizeof(iarmData)))
                 {
                     NMLOG_INFO("GetIPSettings - IARM Success");
+                    result.m_ipAddrType     = string(iarmData.ipversion);
+                    result.m_autoConfig     = iarmData.autoconfig;
+                    result.m_dhcpServer     = string(iarmData.dhcpserver,MAX_IP_ADDRESS_LEN - 1);
+                    result.m_v6LinkLocal    = "";
+                    result.m_ipAddress      = string(iarmData.ipaddress,MAX_IP_ADDRESS_LEN - 1);
+                    if (0 == strcasecmp("ipv4", iarmData.ipversion))
+                        result.m_prefix = NetmaskToPrefix(iarmData.netmask);
+                    else if (0 == strcasecmp("ipv6", iarmData.ipversion))
+                        result.m_prefix = std::atoi(iarmData.netmask);
+                    result.m_gateway        = string(iarmData.gateway,MAX_IP_ADDRESS_LEN - 1);
+                    result.m_primaryDns     = string(iarmData.primarydns,MAX_IP_ADDRESS_LEN - 1);
+                    result.m_secondaryDns   = string(iarmData.secondarydns,MAX_IP_ADDRESS_LEN - 1);
+
+                    if(ipversionTmp == "IPV4")
+                        ipv4Cache = result;
+                    else
+                        ipv6Cache = result;
                     rc = Core::ERROR_NONE;
                 }
                 else
                     NMLOG_ERROR("GetIPSettings - Calling IARM Failed");
-            }
-
-            if (rc == Core::ERROR_NONE)
-            {
-                result.m_ipAddrType     = string(iarmData.ipversion);
-                result.m_autoConfig     = iarmData.autoconfig;
-                result.m_dhcpServer     = string(iarmData.dhcpserver,MAX_IP_ADDRESS_LEN - 1);
-                result.m_v6LinkLocal    = "";
-                result.m_ipAddress      = string(iarmData.ipaddress,MAX_IP_ADDRESS_LEN - 1);
-                if (0 == strcasecmp("ipv4", iarmData.ipversion))
-                    result.m_prefix = NetmaskToPrefix(iarmData.netmask);
-                else if (0 == strcasecmp("ipv6", iarmData.ipversion))
-                    result.m_prefix = std::atoi(iarmData.netmask);
-                result.m_gateway        = string(iarmData.gateway,MAX_IP_ADDRESS_LEN - 1);
-                result.m_primaryDns     = string(iarmData.primarydns,MAX_IP_ADDRESS_LEN - 1);
-                result.m_secondaryDns   = string(iarmData.secondarydns,MAX_IP_ADDRESS_LEN - 1);
-
-                if(ipversionNonConst == "IPV4")
-                    ipv4Cache = result;
-                else
-                    ipv6Cache = result;
             }
 
             return rc;
