@@ -534,7 +534,7 @@ namespace WPEFramework
                         Exchange::INetworkManager::WiFiState state = errorcode_to_wifi_state(e->data.wifiError.code);
                         NMLOG_INFO("Event IARM_BUS_WIFI_MGR_EVENT_onError received; code=%d", e->data.wifiError.code);
                         ::_instance->ReportWiFiStateChangedEvent(state);
-                        WiFiStateCache.reset();
+                        WiFiStateCache = state;
                         break;
                     }
                     default:
@@ -594,6 +594,7 @@ namespace WPEFramework
             char c;
 
             ::_instance = this;
+            WiFiStateCache = Exchange::INetworkManager::WIFI_STATE_DISCONNECTED;
 
             IARM_Result_t res = IARM_Bus_Init("netsrvmgr-thunder");
             NMLOG_INFO("IARM_Bus_Init: %d", res);
