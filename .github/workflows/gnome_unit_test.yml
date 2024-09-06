@@ -173,7 +173,7 @@ jobs:
           -DEXCEPTIONS_ENABLE=ON
           -I ${{github.workspace}}/networkmanagerTests/headers
           -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
-          -I ${{github.workspace}}/networkmanager/Tests/headers/network
+          -I ${{github.workspace}}/networkmanager/Tests/headers/network"
           -DCMAKE_DISABLE_FIND_PACKAGE_IARMBus=ON
           -DENABLE_GNOME_NETWORKMANAGER=ON
           -DENABLE_NETWORKMANAGER_UNIT_TEST=OFF
