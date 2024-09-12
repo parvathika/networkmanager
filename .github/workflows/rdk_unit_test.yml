@@ -152,7 +152,7 @@ jobs:
           path: networkmanager
 
       - name: Generate external headers
-        run: >
+        run: |
           mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus"
     	  mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/network"
     	  touch "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h"
@@ -176,7 +176,7 @@ jobs:
         run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/gcc-with-coverage.cmake" >> $GITHUB_ENV
 
       - name: Build networkmanager with RDK Proxy
-        run: >
+        run: |
           cmake
           -S "${{github.workspace}}/networkmanager"
           -B build/RDKNetworkmanager
