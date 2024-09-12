@@ -145,7 +145,6 @@ jobs:
           cd "${{github.workspace}}/networkmanager/Tests/"
           mkdir -p $HOME/networkmanager/Tests/headers/rdk/iarmbus
           mkdir -p $HOME/networkmanager/Tests/headers/network
-          cd headers
           touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h
           touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBus.h
           touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBusDaemon.h
