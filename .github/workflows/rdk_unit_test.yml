@@ -148,7 +148,6 @@ jobs:
 
       - name: Generate external headers
         run: |
-          cd "${{github.workspace}}/networkmanager/Tests/"
           mkdir -p $HOME/networkmanager/Tests/headers/rdk/iarmbus
           mkdir -p $HOME/networkmanager/Tests/headers/network
           touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h
