@@ -91,7 +91,9 @@ jobs:
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
           -DGENERIC_CMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
+          &&
           cmake --build build/ThunderTools -j8
+          &&
           cmake --install build/ThunderTools
 
       - name: Checkout Thunder
@@ -112,7 +114,9 @@ jobs:
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
           -DBUILD_TYPE=${{env.BUILD_TYPE}} -DBINDING=127.0.0.1 -DPORT=55555 
           -DEXCEPTIONS_ENABLE=ON
+          &&
           cmake --build build/Thunder -j8
+          &&
           cmake --install build/Thunder
 
       - name: Checkout ThunderInterfaces
@@ -132,7 +136,9 @@ jobs:
           -DEXCEPTIONS_ENABLE=ON 
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
+          &&
           cmake --build build/ThunderInterfaces -j8
+          &&
           cmake --install build/ThunderInterfaces
 
       - name: Checkout networkmanager
@@ -172,14 +178,16 @@ jobs:
       - name: Build networkmanager with RDK Proxy
         run: |
           cmake 
-          -S "${{github.workspace}}/networkmanager" 
-          -B build/RDKNetworkmanager 
-          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" 
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
-          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
-          -DENABLE_GNOME_NETWORKMANAGER=OFF 
-          -DENABLE_NETWORKMANAGER_UNIT_TEST=ON 
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-          cmake --build build/RDKNetworkmanager -j16
+          -S "${{github.workspace}}/networkmanager" \
+          -B build/RDKNetworkmanager \
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" \
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" \
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" \
+          -DENABLE_GNOME_NETWORKMANAGER=OFF \
+          -DENABLE_NETWORKMANAGER_UNIT_TEST=ON \
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+          &&
+          cmake --build build/RDKNetworkmanager -j16 \
+          &&
           cmake --install build/RDKNetworkmanager
 
