@@ -152,23 +152,21 @@ jobs:
           path: networkmanager
 
       - name: Generate external headers
-        run: >
-          cd "${{github.workspace}}/networkmanager/Tests/"
-          &&
-          mkdir -p
-          headers
-          headers/rdk/iarmbus
-          headers/network
-          &&
-          cd headers
-          &&
-          touch
-          rdk/iarmbus/libIARM.h
-          rdk/iarmbus/libIBus.h
-          rdk/iarmbus/libIBusDaemon.h
-          network/wifiSrvMgrIarmIf.h
-          network/netsrvmgrIarm.h
-  
+        run: |
+          mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus"
+    	  mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/network"
+    	  touch "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h"
+    	  touch "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIBus.h"
+    	  touch "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIBusDaemon.h"
+    	  touch "${{github.workspace}}/networkmanager/Tests/headers/network/wifiSrvMgrIarmIf.h"
+    	  touch "${{github.workspace}}/networkmanager/Tests/headers/network/netsrvmgrIarm.h"
+    	  
+      - name: Set up environment variables for CMake
+        run: |
+    	 echo "IARMBUS_INCLUDE_DIRS=${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus" >> $GITHUB_ENV
+    	 echo "IARMBUS_LIBRARIES=${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h" >> $GITHUB_ENV
+
+          
       - name: Set clang toolchain
         if: ${{ matrix.compiler == 'clang' }}
         run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/clang.cmake" >> $GITHUB_ENV
