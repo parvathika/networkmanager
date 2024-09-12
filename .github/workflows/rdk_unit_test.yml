@@ -146,7 +146,21 @@ jobs:
 
       - name: Build networkmanager with RDK Proxy
         run: |
-          cmake -S "${{github.workspace}}/networkmanager" -B build/RDKNetworkmanager -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" -DCMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage -DEXCEPTIONS_ENABLE=ON -I ${{github.workspace}}/networkmanager/Tests/headers -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus -I ${{github.workspace}}/networkmanager/Tests/headers/network" -DENABLE_GNOME_NETWORKMANAGER=OFF -DENABLE_NETWORKMANAGER_UNIT_TEST=ON -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake -S "${{github.workspace}}/networkmanager" 
+          -B build/RDKNetworkmanager 
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" 
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
+          -DCMAKE_CXX_FLAGS="-fprofile-arcs -ftest-coverage -
+          DEXCEPTIONS_ENABLE=ON 
+          -I ${{github.workspace}}/networkmanager/Tests/headers 
+          -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus 
+          -I ${{github.workspace}}/networkmanager/Tests/headers/network" 
+          -DENABLE_GNOME_NETWORKMANAGER=OFF 
+          -DENABLE_NETWORKMANAGER_UNIT_TEST=ON 
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          &&
           cmake --build build/RDKNetworkmanager -j16
+          &&
           cmake --install build/RDKNetworkmanager
 
