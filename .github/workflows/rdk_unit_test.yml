@@ -177,8 +177,8 @@ jobs:
 
       - name: Build networkmanager with RDK Proxy
         run: |
-          cmake 
-          -S "${{github.workspace}}/networkmanager" \
+          cmake \ 
+          -S "/${{github.workspace}}/networkmanager" \
           -B build/RDKNetworkmanager \
           -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" \
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" \
