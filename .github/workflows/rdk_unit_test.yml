@@ -152,7 +152,6 @@ jobs:
           path: networkmanager
 
       - name: Generate external headers
-        # Empty headers to mute errors
         run: >
           cd "${{github.workspace}}/networkmanager/Tests/"
           &&
@@ -190,7 +189,7 @@ jobs:
           -fprofile-arcs
           -ftest-coverage
           -DEXCEPTIONS_ENABLE=ON
-          -I ${{github.workspace}}/networkmanagerTests/headers
+          -I ${{github.workspace}}/networkmanager/Tests/headers
           -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
           -I ${{github.workspace}}/networkmanager/Tests/headers/network"
           -DCMAKE_DISABLE_FIND_PACKAGE_IARMBus=ON
