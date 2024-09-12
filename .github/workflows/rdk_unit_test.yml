@@ -1,3 +1,4 @@
+
 name: rdk_unit_test
 
 on:
@@ -16,7 +17,6 @@ jobs:
   l1-tests:
     name: Build and run unit tests
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         compiler: [ gcc, clang ]
@@ -31,6 +31,10 @@ jobs:
 
     steps:
       - name: Set up cache
+        # Cache Thunder/ThunderInterfaces.
+        # https://github.com/actions/cache
+        # https://docs.github.com/en/rest/actions/cache
+        # Modify the key if changing the list.
         if: ${{ !env.ACT }}
         id: cache
         uses: actions/cache@v3
@@ -60,7 +64,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-
       - run: pip install jsonref
 
       - name: Set up CMake
@@ -69,9 +72,10 @@ jobs:
           cmake-version: '3.16.x'
 
       - name: Install packages
-        run: |
+        run: >
           sudo apt update
-          sudo apt install -y git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
+          &&
+          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
 
       - name: Checkout ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
@@ -80,16 +84,15 @@ jobs:
           repository: rdkcentral/ThunderTools
           path: ThunderTools
           ref: ${{env.THUNDER_TOOLS_REF}}
-
       - name: Build ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          cmake 
-          -S "${{github.workspace}}/ThunderTools" 
-          -B build/ThunderTools 
-          -DEXCEPTIONS_ENABLE=ON 
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
-          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
+        run: >
+          cmake
+          -S "${{github.workspace}}/ThunderTools"
+          -B build/ThunderTools
+          -DEXCEPTIONS_ENABLE=ON
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           -DGENERIC_CMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           &&
           cmake --build build/ThunderTools -j8
@@ -106,13 +109,15 @@ jobs:
 
       - name: Build Thunder
         if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          cmake 
-          -S "${{github.workspace}}/Thunder" 
-          -B build/Thunder 
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
-          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" 
-          -DBUILD_TYPE=${{env.BUILD_TYPE}} -DBINDING=127.0.0.1 -DPORT=55555 
+        run: >
+          cmake
+          -S "${{github.workspace}}/Thunder"
+          -B build/Thunder
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
+          -DBUILD_TYPE=${{env.BUILD_TYPE}}
+          -DBINDING=127.0.0.1
+          -DPORT=55555
           -DEXCEPTIONS_ENABLE=ON
           &&
           cmake --build build/Thunder -j8
@@ -129,12 +134,12 @@ jobs:
 
       - name: Build ThunderInterfaces
         if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          cmake 
-          -S "${{github.workspace}}/ThunderInterfaces" 
-          -B build/ThunderInterfaces 
-          -DEXCEPTIONS_ENABLE=ON 
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" 
+        run: >
+          cmake
+          -S "${{github.workspace}}/ThunderInterfaces"
+          -B build/ThunderInterfaces
+          -DEXCEPTIONS_ENABLE=ON
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           &&
           cmake --build build/ThunderInterfaces -j8
@@ -147,25 +152,23 @@ jobs:
           path: networkmanager
 
       - name: Generate external headers
-        run: |
-          mkdir -p $HOME/networkmanager/Tests/headers/rdk/iarmbus
-          mkdir -p $HOME/networkmanager/Tests/headers/network
-          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h
-          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBus.h
-          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBusDaemon.h
-          touch $HOME/networkmanager/Tests/headers/network/wifiSrvMgrIarmIf.h
-          touch $HOME/networkmanager/Tests/headers/network/netsrvmgrIarm.h
-
-          
-      - name: Ensure mock files have correct permissions
-        run: |
-          chmod -R 755 $HOME/networkmanager/Tests/headers
-
-      - name: Set environment variables for CMake
-        run: |
-          echo "IARMBUS_INCLUDE_DIRS=$HOME/networkmanager/Tests/headers/rdk/iarmbus" >> $GITHUB_ENV
-          echo "IARMBUS_LIBRARIES=$HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h" >> $GITHUB_ENV
-
+        run: >
+          cd "${{github.workspace}}/networkmanager/Tests/"
+          &&
+          mkdir -p
+          headers
+          headers/rdk/iarmbus
+          headers/network
+          &&
+          cd headers
+          &&
+          touch
+          rdk/iarmbus/libIARM.h
+          rdk/iarmbus/libIBus.h
+          rdk/iarmbus/libIBusDaemon.h
+          network/wifiSrvMgrIarmIf.h
+          network/netsrvmgrIarm.h
+  
       - name: Set clang toolchain
         if: ${{ matrix.compiler == 'clang' }}
         run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/clang.cmake" >> $GITHUB_ENV
@@ -175,18 +178,27 @@ jobs:
         run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/gcc-with-coverage.cmake" >> $GITHUB_ENV
 
       - name: Build networkmanager with RDK Proxy
-        run: |
-          cmake \ 
-          -S "/${{github.workspace}}/networkmanager" \
-          -B build/RDKNetworkmanager \
-          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}" \
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr" \
-          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake" \
-          -DENABLE_GNOME_NETWORKMANAGER=OFF \
-          -DENABLE_NETWORKMANAGER_UNIT_TEST=ON \
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+        run: >
+          cmake
+          -S "${{github.workspace}}/networkmanager"
+          -B build/RDKNetworkmanager
+          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
+          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
+          -DCMAKE_CXX_FLAGS="
+          -fprofile-arcs
+          -ftest-coverage
+          -DEXCEPTIONS_ENABLE=ON
+          -I ${{github.workspace}}/networkmanager/Tests/headers
+          -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
+          -I ${{github.workspace}}/networkmanager/Tests/headers/network"
+          -DENABLE_GNOME_NETWORKMANAGER=OFF
+          -DENABLE_NETWORKMANAGER_UNIT_TEST=ON
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           &&
-          cmake --build build/RDKNetworkmanager -j16 \
+          cmake --build build/RDKNetworkmanager -j16
           &&
           cmake --install build/RDKNetworkmanager
 
+     
+      
