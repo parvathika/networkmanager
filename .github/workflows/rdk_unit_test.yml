@@ -152,7 +152,7 @@ jobs:
           path: networkmanager
 
       - name: Generate external headers
-        run: |
+        run: >
           mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus"
     	  mkdir -p "${{github.workspace}}/networkmanager/Tests/headers/network"
     	  touch "${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h"
