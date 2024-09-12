@@ -154,7 +154,7 @@ jobs:
           
       - name: Ensure mock files have correct permissions
         run: |
-          chmod -R 755 $headers/rdk
+          chmod -R 755 $HOME/networkmanager/Tests/headers
 
       - name: Set environment variables for CMake
         run: |
