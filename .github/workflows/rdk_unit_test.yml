@@ -75,7 +75,11 @@ jobs:
         run: >
           sudo apt update
           &&
-          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
+          sudo apt install -y libiarmbus-dev libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
+          
+      - name: Clean Build Directory
+        run: |
+          rm -rf build
 
       - name: Checkout ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
@@ -196,6 +200,7 @@ jobs:
           -DENABLE_GNOME_NETWORKMANAGER=OFF
           -DENABLE_NETWORKMANAGER_UNIT_TEST=ON
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          -DCMAKE_VERBOSE_MAKEFILE=ON
           &&
           cmake --build build/RDKNetworkmanager -j16
           &&
