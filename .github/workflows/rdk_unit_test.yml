@@ -143,16 +143,15 @@ jobs:
       - name: Generate external headers
         run: |
           cd "${{github.workspace}}/networkmanager/Tests/"
-          mkdir -p 
-          headers/rdk/iarmbus 
-          headers/network
+          mkdir -p $headers/rdk/iarmbus 
+          mkdir -p $headers/network
           cd headers
-          touch 
-          rdk/iarmbus/libIARM.h 
-          rdk/iarmbus/libIBus.h 
-          rdk/iarmbus/libIBusDaemon.h 
-          network/wifiSrvMgrIarmIf.h 
-          network/netsrvmgrIarm.h
+          touch  $headers/rdk/iarmbus/libIARM.h 
+          touch  $headers/rdk/iarmbus/libIBus.h 
+          touch  $headers/rdk/iarmbus/libIBusDaemon.h 
+          touch  $headers/rdk/iarmbus/libIARM.a
+          touch  $headers/network/wifiSrvMgrIarmIf.h 
+          touch  $headers/network/netsrvmgrIarm.h
           
       - name: Ensure mock files have correct permissions
         run: |
