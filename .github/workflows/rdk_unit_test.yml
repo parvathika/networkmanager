@@ -143,24 +143,24 @@ jobs:
       - name: Generate external headers
         run: |
           cd "${{github.workspace}}/networkmanager/Tests/"
-          mkdir -p $headers/rdk/iarmbus 
-          mkdir -p $headers/network
+          mkdir -p $HOME/networkmanager/Tests/headers/rdk/iarmbus
+          mkdir -p $HOME/networkmanager/Tests/headers/network
           cd headers
-          touch  $headers/rdk/iarmbus/libIARM.h 
-          touch  $headers/rdk/iarmbus/libIBus.h 
-          touch  $headers/rdk/iarmbus/libIBusDaemon.h 
-          touch  $headers/rdk/iarmbus/libIARM.a
-          touch  $headers/network/wifiSrvMgrIarmIf.h 
-          touch  $headers/network/netsrvmgrIarm.h
+          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h
+          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBus.h
+          touch $HOME/networkmanager/Tests/headers/rdk/iarmbus/libIBusDaemon.h
+          touch $HOME/networkmanager/Tests/headers/network/wifiSrvMgrIarmIf.h
+          touch $HOME/networkmanager/Tests/headers/network/netsrvmgrIarm.h
+
           
       - name: Ensure mock files have correct permissions
         run: |
           chmod -R 755 $headers/rdk
 
-      - name: Print environment variables
+      - name: Set environment variables for CMake
         run: |
-          echo "IARMBUS_INCLUDE_DIRS=$IARMBUS_INCLUDE_DIRS"
-          echo "IARMBUS_LIBRARIES=$IARMBUS_LIBRARIES"
+          echo "IARMBUS_INCLUDE_DIRS=$HOME/networkmanager/Tests/headers/rdk/iarmbus" >> $GITHUB_ENV
+          echo "IARMBUS_LIBRARIES=$HOME/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h" >> $GITHUB_ENV
 
       - name: Set clang toolchain
         if: ${{ matrix.compiler == 'clang' }}
