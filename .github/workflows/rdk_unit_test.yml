@@ -162,7 +162,7 @@ jobs:
     	  touch "${{github.workspace}}/networkmanager/Tests/headers/network/netsrvmgrIarm.h"
     	  
       - name: Set up environment variables for CMake
-        run: |
+        run: >
     	 echo "IARMBUS_INCLUDE_DIRS=${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus" >> $GITHUB_ENV
     	 echo "IARMBUS_LIBRARIES=${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/libIARM.h" >> $GITHUB_ENV
 
