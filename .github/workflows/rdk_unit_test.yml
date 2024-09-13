@@ -13,8 +13,7 @@ env:
   INTERFACES_REF: "R4.4.1"
   IARMBUS_INCLUDE_DIRS: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_INCLUDE_DIRS
   IARMBUS_LIBRARIES: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_LIBRARIES
-      	 
-      	 
+
 jobs:
   l1-tests:
     name: Build and run unit tests
@@ -68,7 +67,7 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
           cmake-version: '3.16.x'
-	 
+
       - name: Install packages
         run: >
           sudo apt update
