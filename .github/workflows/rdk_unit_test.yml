@@ -11,8 +11,6 @@ env:
   THUNDER_REF: "R4.4.1"
   THUNDER_TOOLS_REF: "R4.4.1"
   INTERFACES_REF: "R4.4.1"
-  IARMBUS_INCLUDE_DIRS: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_INCLUDE_DIRS
-  IARMBUS_LIBRARIES: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_LIBRARIES
 
 jobs:
   l1-tests:
@@ -150,11 +148,14 @@ jobs:
 
       - name: Generate external headers
         run: >
+          touch install/usr/lib/libIARMBus.so && mkdir -p install/usr/include/rdk/iarmbus && touch install/usr/include/rdk/iarmbus/libIARM.h
+          &&
           cd "${{github.workspace}}/networkmanager/Tests/"
           &&
           mkdir -p
           headers
           headers/rdk/iarmbus
+          headers/network
           &&
           cd headers
           &&
@@ -162,6 +163,8 @@ jobs:
           rdk/iarmbus/libIARM.h
           rdk/iarmbus/libIBus.h
           rdk/iarmbus/libIBusDaemon.h
+          network/wifiSrvMgrIarmIf.h
+          network/netsrvmgrIarm.h
 
       - name: Set clang toolchain
         if: ${{ matrix.compiler == 'clang' }}
