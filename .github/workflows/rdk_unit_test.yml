@@ -11,10 +11,10 @@ env:
   THUNDER_REF: "R4.4.1"
   THUNDER_TOOLS_REF: "R4.4.1"
   INTERFACES_REF: "R4.4.1"
-      	 set(IARMBUS_LIBRARIES ${IARMBUS_LIBRARIES} CACHE PATH "Path to IARMBus library")
- 	 set(IARMBUS_INCLUDE_DIRS ${IARMBUS_INCLUDE_DIRS})
-	 set(IARMBUS_INCLUDE_DIRS ${IARMBUS_INCLUDE_DIRS} CACHE PATH "Path to IARMBus include")
-  
+  IARMBUS_INCLUDE_DIRS: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_INCLUDE_DIRS
+  IARMBUS_LIBRARIES: ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus/IARMBUS_LIBRARIES
+      	 
+      	 
 jobs:
   l1-tests:
     name: Build and run unit tests
