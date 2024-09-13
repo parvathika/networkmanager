@@ -11,8 +11,8 @@ env:
   THUNDER_REF: "R4.4.1"
   THUNDER_TOOLS_REF: "R4.4.1"
   INTERFACES_REF: "R4.4.1"
-  IARMBUS_INCLUDE_DIRS: /path/to/iarmbus/includes
-  IARMBUS_LIBRARIES: /path/to/iarmbus/libraries
+  IARMBUS_INCLUDE_DIRS: ${{github.workspace}}/networkmanager/rdk/iarmbus/includes
+  IARMBUS_LIBRARIES: ${{github.workspace}}/networkmanager/rdk/iarmbus/libraries
 
 jobs:
   l1-tests:
