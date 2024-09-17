@@ -54,6 +54,13 @@ jobs:
             !install/usr/lib/pkgconfig/gtest_main.pc
             !install/usr/lib/wpeframework/plugins
           key: ${{ runner.os }}-${{ env.THUNDER_REF }}-${{ env.INTERFACES_REF }}-3
+          
+      - name: Install packages
+        run: >
+          sudo apt update
+          &&
+          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
+
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -65,12 +72,6 @@ jobs:
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
           cmake-version: '3.16.x'
-
-      - name: Install packages
-        run: >
-          sudo apt update
-          &&
-          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
 
       - name: Checkout ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
@@ -165,14 +166,6 @@ jobs:
           rdk/iarmbus/libIBusDaemon.h
           network/wifiSrvMgrIarmIf.h
           network/netsrvmgrIarm.h
-
-      - name: Set clang toolchain
-        if: ${{ matrix.compiler == 'clang' }}
-        run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/clang.cmake" >> $GITHUB_ENV
-
-      - name: Set gcc/with-coverage toolchain
-        if: ${{ matrix.compiler == 'gcc' && matrix.coverage == 'with-coverage' && !env.ACT }}
-        run: echo "TOOLCHAIN_FILE=${{github.workspace}}/networkmanager/Tests/gcc-with-coverage.cmake" >> $GITHUB_ENV
 
       - name: Build networkmanager with RDK Proxy
         run: >
