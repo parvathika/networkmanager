@@ -180,7 +180,13 @@ jobs:
           -ftest-coverage
           -DEXCEPTIONS_ENABLE=ON
           -I ${{github.workspace}}/networkmanager/Tests/headers
+<<<<<<< HEAD
           -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus"
+=======
+          -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
+          -I ${{github.workspace}}/networkmanager/Tests/headers/network"
+          -DCMAKE_DISABLE_FIND_PACKAGE_IARMBus=ON
+>>>>>>> 037e47e (edit1)
           -DENABLE_GNOME_NETWORKMANAGER=OFF
           -DENABLE_NETWORKMANAGER_UNIT_TEST=ON
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
