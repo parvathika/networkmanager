@@ -59,7 +59,7 @@ jobs:
         run: >
           sudo apt update
           &&
-          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev valgrind lcov clang
+          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev 
 
 
       - name: Set up Python
