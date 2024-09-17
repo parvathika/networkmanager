@@ -538,7 +538,6 @@ namespace WPEFramework
         }
         void  NetworkManagerImplementation::threadEventRegistration()
         {
-            IARM_Result_t res = IARM_RESULT_SUCCESS;
             IARM_Result_t retVal = IARM_RESULT_SUCCESS;
             do
             {
@@ -1216,7 +1215,7 @@ const string CIDR_PREFIXES[CIDR_NETMASK_IP_LEN] = {
                 if (!signalStrength.empty())
 		{
                     signalStrengthOut = std::stof(signalStrength.c_str());
-		    NMLOG_INFO ("WiFiSignalStrength in dB = %s",signalStrengthOut);
+		    NMLOG_INFO ("WiFiSignalStrength in dB = %f",signalStrengthOut);
 		}
 
                 if (signalStrengthOut == 0)
@@ -1311,7 +1310,6 @@ const string CIDR_PREFIXES[CIDR_NETMASK_IP_LEN] = {
         {
             LOG_ENTRY_FUNCTION();
             uint32_t rc = Core::ERROR_RPC_CALL_FAILED;
-            IARM_Result_t retVal = IARM_RESULT_SUCCESS;
             IARM_Bus_WiFiSrvMgr_Param_t param;
             memset(&param, 0, sizeof(param));
 
