@@ -57,7 +57,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.THUNDER_REF }}-${{ env.INTERFACES_REF }}-3
           
       - name: Install packages
-        run: |
+        run: >
   	 sudo apt update
   	 sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev
 
