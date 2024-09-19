@@ -35,8 +35,8 @@ else()
 find_package(IARMBus REQUIRED)
 endif ()
 
-if(ENABLE_NETWORKMANAGER_UNIT_TEST)
-    include(cmake/UnitTest.cmake)
+if(ENABLE_NETWORKMANAGER_UNIT_TEST) 
+    include(cmake/UnitTest.cmake) 
 endif()
 
 message("Setup ProxyStub for INetworkManager.h")

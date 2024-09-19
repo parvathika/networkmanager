@@ -40,18 +40,6 @@ jobs:
             build/ThunderTools
             install
             !install/etc/WPEFramework/plugins
-            !install/usr/bin/RdkServicesL1Test
-            !install/usr/include/gmock
-            !install/usr/include/gtest
-            !install/usr/lib/libgmockd.a
-            !install/usr/lib/libgmock_maind.a
-            !install/usr/lib/libgtestd.a
-            !install/usr/lib/libgtest_maind.a
-            !install/usr/lib/cmake/GTest
-            !install/usr/lib/pkgconfig/gmock.pc
-            !install/usr/lib/pkgconfig/gmock_main.pc
-            !install/usr/lib/pkgconfig/gtest.pc
-            !install/usr/lib/pkgconfig/gtest_main.pc
             !install/usr/lib/wpeframework/plugins
           key: ${{ runner.os }}-${{ env.THUNDER_REF }}-${{ env.INTERFACES_REF }}-3
           
@@ -78,6 +66,28 @@ jobs:
           repository: rdkcentral/ThunderTools
           path: ThunderTools
           ref: ${{env.THUNDER_TOOLS_REF}}
+          
+      - name: Checkout Thunder
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: rdkcentral/Thunder
+          path: Thunder
+          ref: ${{env.THUNDER_REF}}
+
+      - name: Checkout ThunderInterfaces
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: rdkcentral/ThunderInterfaces
+          path: ThunderInterfaces
+          ref: ${{env.INTERFACES_REF}}
+          
+      - name: Checkout networkmanager
+        uses: actions/checkout@v3
+        with:
+          path: networkmanager    
+              
       - name: Build ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
         run: >
@@ -92,14 +102,7 @@ jobs:
           cmake --build build/ThunderTools -j8
           &&
           cmake --install build/ThunderTools
-      - name: Checkout Thunder
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: rdkcentral/Thunder
-          path: Thunder
-          ref: ${{env.THUNDER_REF}}
-
+        
       - name: Build Thunder
         if: steps.cache.outputs.cache-hit != 'true'
         run: >
@@ -116,13 +119,6 @@ jobs:
           cmake --build build/Thunder -j8
           &&
           cmake --install build/Thunder
-      - name: Checkout ThunderInterfaces
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: rdkcentral/ThunderInterfaces
-          path: ThunderInterfaces
-          ref: ${{env.INTERFACES_REF}}
 
       - name: Build ThunderInterfaces
         if: steps.cache.outputs.cache-hit != 'true'
@@ -137,11 +133,7 @@ jobs:
           cmake --build build/ThunderInterfaces -j8
           &&
           cmake --install build/ThunderInterfaces
-      - name: Checkout networkmanager
-        uses: actions/checkout@v3
-        with:
-          path: networkmanager
-
+      
       - name: Generate external headers
         run: >
           touch install/usr/lib/libIARMBus.so && mkdir -p install/usr/include/rdk/iarmbus && touch install/usr/include/rdk/iarmbus/libIARM.h
@@ -158,9 +150,6 @@ jobs:
           touch
           rdk/iarmbus/libIARM.h
           rdk/iarmbus/libIBus.h
-          rdk/iarmbus/libIBusDaemon.h
-          network/wifiSrvMgrIarmIf.h
-          network/netsrvmgrIarm.h
       - name: Build networkmanager with RDK Proxy
         run: >
           cmake
@@ -175,8 +164,8 @@ jobs:
           -DEXCEPTIONS_ENABLE=ON
           -I ${{github.workspace}}/networkmanager/Tests/headers
           -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus"
-          -DENABLE_GNOME_NETWORKMANAGER=OFF
           -DENABLE_NETWORKMANAGER_UNIT_TEST=ON
+          -DENABLE_GNOME_NETWORKMANAGER=OFF
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           &&
           cmake --build build/RDKNetworkmanager -j16

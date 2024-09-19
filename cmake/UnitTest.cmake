@@ -13,9 +13,6 @@ set(EMPTY_HEADERS_DIRS
 set(EMPTY_HEADERS
         ${BASEDIR}/rdk/iarmbus/libIARM.h
         ${BASEDIR}/rdk/iarmbus/libIBus.h
-        ${BASEDIR}/rdk/iarmbus/libIBusDaemon.h
-        ${BASEDIR}/network/wifiSrvMgrIarmIf.h
-        ${BASEDIR}/network/netsrvmgrIarm.h
         )
 
 file(MAKE_DIRECTORY ${EMPTY_HEADERS_DIRS})
@@ -41,10 +38,6 @@ set(FAKE_HEADERS
 foreach (file ${FAKE_HEADERS})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${file}")
 endforeach ()
-
-add_compile_options(-Wall -Werror)
-
-add_link_options(-Wl,-wrap,system -Wl,-wrap,popen -Wl,-wrap,syslog -Wl,-wrap,pclose -Wl,-wrap,getmntent -Wl,-wrap,setmntent -Wl,-wrap,v_secure_popen -Wl,-wrap,v_secure_pclose -Wl,-wrap,v_secure_system)
 
 message("Setting build options")
 set(CMAKE_DISABLE_FIND_PACKAGE_IARMBus ON)
