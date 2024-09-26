@@ -1,0 +1,5 @@
+if(EXISTS "/home/parvathinew/parvathi/networkmanager/test_WiFiSignalStrengthMonitor[1]_tests.cmake")
+  include("/home/parvathinew/parvathi/networkmanager/test_WiFiSignalStrengthMonitor[1]_tests.cmake")
+else()
+  add_test(test_WiFiSignalStrengthMonitor_NOT_BUILT test_WiFiSignalStrengthMonitor_NOT_BUILT)
+endif()
