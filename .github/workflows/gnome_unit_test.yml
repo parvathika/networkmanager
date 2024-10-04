@@ -7,26 +7,12 @@ on:
     branches: [ main, develop, 'release/**']
 
 env:
-  BUILD_TYPE: Debug
   THUNDER_REF: "R4.4.1"
-  THUNDER_TOOLS_REF: "R4.4.1"
-  INTERFACES_REF: "R4.4.1"
 
 jobs:
-  l1-tests:
+  unit-tests:
     name: Build and run unit tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        compiler: [ gcc, clang ]
-        coverage: [ with-coverage, without-coverage ]
-        exclude:
-          - compiler: clang
-            coverage: with-coverage
-          - compiler: clang
-            coverage: without-coverage
-          - compiler: gcc
-            coverage: without-coverage
 
     steps:
       - name: Configure cache
@@ -41,13 +27,12 @@ jobs:
             install
             !install/etc/WPEFramework/plugins
             !install/usr/lib/wpeframework/plugins
-          key: ${{ runner.os }}-${{ env.THUNDER_REF }}-${{ env.INTERFACES_REF }}-3
-          
+          key: ${{ runner.os }}-${{ env.THUNDER_REF }}
+
       - name: Install packages
-        run: >
+        run: |
           sudo apt update
-          &&
-          sudo apt install -y libnm0 git pkg-config ninja-build libssl-dev libglib2.0-dev libnm-dev libcurl4-openssl-dev 
+          sudo apt-get install -y pkg-config libglib2.0-dev libnm-dev libcurl4-openssl-dev ninja-build
 
       - name: Configure Python
         uses: actions/setup-python@v4
@@ -60,80 +45,51 @@ jobs:
         with:
           cmake-version: '3.16.x'
 
-      - name: Checkout ThunderTools
+      - name: Checkout thunder repositories
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: rdkcentral/ThunderTools
-          path: ThunderTools
-          ref: ${{env.THUNDER_TOOLS_REF}}
-          
-      - name: Checkout Thunder
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: rdkcentral/Thunder
-          path: Thunder
-          ref: ${{env.THUNDER_REF}}
-          
-      - name: Checkout ThunderInterfaces
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: rdkcentral/ThunderInterfaces
-          path: ThunderInterfaces
-          ref: ${{env.INTERFACES_REF}}
-                  
-      - name: Checkout networkmanager
-        uses: actions/checkout@v3
-        with:
-          path: networkmanager
-          
+        run: |
+          git clone https://github.com/rdkcentral/ThunderTools ThunderTools --branch ${{ env.THUNDER_REF }}
+          git clone https://github.com/rdkcentral/Thunder Thunder --branch ${{ env.THUNDER_REF }}
+          git clone https://github.com/rdkcentral/ThunderInterfaces ThunderInterfaces --branch ${{ env.THUNDER_REF }}
+
       - name: Build ThunderTools
         if: steps.cache.outputs.cache-hit != 'true'
         run: >
           cmake
-          -S "${{github.workspace}}/ThunderTools"
-          -B build/ThunderTools
-          -DEXCEPTIONS_ENABLE=ON
+          -S "${{github.workspace}}/ThunderTools" -B build/ThunderTools
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           -DGENERIC_CMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           &&
-          cmake --build build/ThunderTools -j8
-          &&
-          cmake --install build/ThunderTools
+          cmake --build build/ThunderTools --target install -j8
 
       - name: Build Thunder
         if: steps.cache.outputs.cache-hit != 'true'
         run: >
           cmake
-          -S "${{github.workspace}}/Thunder"
-          -B build/Thunder
+          -S "${{github.workspace}}/Thunder" -B build/Thunder
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
-          -DBUILD_TYPE=${{env.BUILD_TYPE}}
+          -DBUILD_TYPE=Debug
           -DBINDING=127.0.0.1
-          -DPORT=55555
-          -DEXCEPTIONS_ENABLE=ON
+          -DPORT=9998
           &&
-          cmake --build build/Thunder -j8
-          &&
-          cmake --install build/Thunder
+          cmake --build build/Thunder --target install -j8
 
       - name: Build ThunderInterfaces
         if: steps.cache.outputs.cache-hit != 'true'
         run: >
           cmake
-          -S "${{github.workspace}}/ThunderInterfaces"
-          -B build/ThunderInterfaces
-          -DEXCEPTIONS_ENABLE=ON
+          -S "${{github.workspace}}/ThunderInterfaces" -B build/ThunderInterfaces
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           &&
-          cmake --build build/ThunderInterfaces -j8
-          &&
-          cmake --install build/ThunderInterfaces
+          cmake --build build/ThunderInterfaces --target install -j8
+
+      - name: Checkout networkmanager
+        uses: actions/checkout@v3
+        with:
+          path: networkmanager
 
       - name: Build networkmanager with Gnome Proxy
         run: >
@@ -143,19 +99,8 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
-          -DCMAKE_CXX_FLAGS="
-          -fprofile-arcs
-          -ftest-coverage
-          -DEXCEPTIONS_ENABLE=ON
-          -I ${{github.workspace}}/networkmanagerTests/headers
-          -I ${{github.workspace}}/networkmanager/Tests/headers/rdk/iarmbus
-          -I ${{github.workspace}}/networkmanager/Tests/headers/network"
-          -DCMAKE_DISABLE_FIND_PACKAGE_IARMBus=ON
           -DENABLE_GNOME_NETWORKMANAGER=ON
-          -DENABLE_NETWORKMANAGER_UNIT_TEST=OFF
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           &&
-          cmake --build build/GnomeNetworkmanager -j16
-          &&
-          cmake --install build/GnomeNetworkmanager
+          cmake --build build/GnomeNetworkmanager --target install -j8
+
 

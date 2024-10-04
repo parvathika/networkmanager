@@ -15,10 +15,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-file(GLOB TESTS tests/*.cpp)
-
-enable_testing()
-
 add_executable(
   test_WiFiSignalStrengthMonitor
   test_WiFiSignalStrengthMonitor.cpp
