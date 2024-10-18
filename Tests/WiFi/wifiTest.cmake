@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-
-
 set(WIFI_TEST "wifitest")
-
-find_package(GTest REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -58,7 +54,7 @@ target_compile_options(${WIFI_TEST} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/I
 
 target_include_directories(${WIFI_TEST} PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBNM_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS}{PROJECT_SOURCE_DIR})
 
-target_include_directories(${WIFI_TEST} PRIVATE neworkmanager)
+target_include_directories(${WIFI_TEST} PRIVATE Tests)
 
 
 
