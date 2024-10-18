@@ -26,7 +26,7 @@ set(PLUGIN_LEGACY_DEPRECATED_NETWORK ${NAMESPACE}Network)
 set(PLUGIN_LEGACY_DEPRECATED_WIFI    ${NAMESPACE}WiFiManager)
 
 find_package(${NAMESPACE}Core REQUIRED)
-find_package(${NAMESPACE}Plugins REQUIRED)
+find_package(${NAMEPSACE}Plugins REQUIRED)
 find_package(CURL)
 if(ENABLE_GNOME_NETWORKMANAGER)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
@@ -145,4 +145,7 @@ install(TARGETS ${PLUGIN_LEGACY_DEPRECATED_WIFI} DESTINATION ${CMAKE_INSTALL_PRE
 write_config()
 write_config(PLUGINS LegacyPlugin_NetworkAPIs CLASSNAME Network LOCATOR lib${PLUGIN_LEGACY_DEPRECATED_NETWORK}.so)
 write_config(PLUGINS LegacyPlugin_WiFiManagerAPIs CLASSNAME WiFiManager LOCATOR lib${PLUGIN_LEGACY_DEPRECATED_WIFI}.so)
+
+include(Tests/L1Tests/tests/wifiTest.cmake)
+
 
