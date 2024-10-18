@@ -28,7 +28,7 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(${WIFI_TEST}
 
-  Tests/L1Tests/tests/test_WiFiSignalStrengthMonitor.cpp
+  Tests/WiFi/test_WiFiSignalStrengthMonitor.cpp
 
   WiFiSignalStrengthMonitor.cpp
 
