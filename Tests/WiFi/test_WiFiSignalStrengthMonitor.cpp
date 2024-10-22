@@ -1,9 +1,12 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <fstream>
-#include <iostream>
 #include "WiFiSignalStrengthMonitor.h"
 #include "NetworkManagerImplementation.h"
+#include "NetworkManagerLogger.h"
+#include "INetworkManager.h"
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <list>
+#include <string>
 
 using namespace std;
 using namespace WPEFramework;
