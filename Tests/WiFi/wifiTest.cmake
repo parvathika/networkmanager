@@ -58,7 +58,7 @@ target_include_directories(${WIFI_TEST} PRIVATE Tests)
 
 
 
-target_link_libraries(${WIFI_TEST} ${WPEFramework}Core::${WPEFramework}Core ${GLIB_LIBRARIES} ${GIO_LIBRARIES} uuid)
+target_link_libraries(${WIFI_TEST} ${NAMESPACE}Core::${NAMESPACE}Core ${GLIB_LIBRARIES} ${GIO_LIBRARIES} uuid)
 
 
 
