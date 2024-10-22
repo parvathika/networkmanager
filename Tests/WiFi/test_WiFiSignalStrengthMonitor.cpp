@@ -2,6 +2,8 @@
 #include "NetworkManagerImplementation.h"
 #include "NetworkManagerLogger.h"
 #include "INetworkManager.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <iostream>
 #include <thread>
 #include <chrono>
