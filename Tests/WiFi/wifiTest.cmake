@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(WIFI_TEST "wifitest")
+set(WIFI_TEST "wifiTest")
 
 find_package(PkgConfig REQUIRED)
 
