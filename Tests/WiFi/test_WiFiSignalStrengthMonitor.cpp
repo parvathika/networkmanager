@@ -16,11 +16,20 @@ using namespace WPEFramework::Plugin;
 
 class MockNetworkManagerImplementation : public NetworkManagerImplementation {
 public:
-    MOCK_METHOD(void, ReportWiFiSignalStrengthChangedEvent, 
-                (const std::string&, const std::string&, 
-                 Exchange::INetworkManager::WiFiSignalQuality), 
+    MOCK_METHOD(void, ReportWiFiSignalStrengthChangedEvent,
+                (const std::string& ssid, const std::string& signalLevel, 
+                 Exchange::INetworkManager::WiFiSignalQuality signalQuality), 
                 (override));
-    // Mock other methods as needed
+    
+    // Implementing required pure virtual functions
+    void AddRef() const override {
+        // Implementation for testing (if necessary)
+    }
+
+    uint32_t Release() const override {
+        // Implementation for testing (if necessary)
+        return 0; 
+    }
 };
 
 class WiFiSignalStrengthMonitorTest : public ::testing::Test {
