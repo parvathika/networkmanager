@@ -52,6 +52,7 @@ target_include_directories(${WIFI_TEST} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     Tests
     ${gtest_SOURCE_DIR}/include  
+    ${gtest_SOURCE_DIR}/../googlemock/include
 )
 
 target_link_libraries(${WIFI_TEST} ${NAMESPACE}Core::${NAMESPACE}Core ${GLIB_LIBRARIES} ${GIO_LIBRARIES} uuid)
