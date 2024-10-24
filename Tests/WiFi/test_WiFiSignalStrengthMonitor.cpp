@@ -20,16 +20,6 @@ public:
                 (const std::string& ssid, const std::string& signalLevel, 
                  Exchange::INetworkManager::WiFiSignalQuality signalQuality), 
                 (override));
-    
-    // Implementing required pure virtual functions
-    void AddRef() const override {
-        // Implementation for testing (if necessary)
-    }
-
-    uint32_t Release() const override {
-        // Implementation for testing (if necessary)
-        return 0; 
-    }
 };
 
 class WiFiSignalStrengthMonitorTest : public ::testing::Test {
