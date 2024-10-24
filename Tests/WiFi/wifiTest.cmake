@@ -10,8 +10,6 @@ pkg_check_modules(GIO REQUIRED gio-2.0)
 
 pkg_check_modules(LIBNM REQUIRED libnm)
 
-
-
 include(FetchContent)
 
 FetchContent_Declare(
@@ -23,8 +21,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(googletest)
-
-
 
 add_executable(${WIFI_TEST}
 
@@ -38,8 +34,6 @@ add_executable(${WIFI_TEST}
 
 )
 
-
-
 set_target_properties(${WIFI_TEST} PROPERTIES
 
     CXX_STANDARD 11
@@ -48,22 +42,14 @@ set_target_properties(${WIFI_TEST} PROPERTIES
 
 )
 
-
-
 target_compile_options(${WIFI_TEST} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/INetworkManager.h)
 
-target_include_directories(${WIFI_TEST} PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBNM_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS}{PROJECT_SOURCE_DIR})
-
-target_include_directories(${WIFI_TEST} PRIVATE Tests)
-
-
+target_include_directories(${WIFI_TEST} PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBNM_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS}{PROJECT_SOURCE_DIR}  ${CMAKE_CURRENT_SOURCE_DIR}
+    Tests
+    ${gtest_SOURCE_DIR)
 
 target_link_libraries(${WIFI_TEST} ${NAMESPACE}Core::${NAMESPACE}Core ${GLIB_LIBRARIES} ${GIO_LIBRARIES} uuid)
 
-
-
 target_include_directories(${WIFI_TEST} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-
 
 install(TARGETS ${WIFI_TEST} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
