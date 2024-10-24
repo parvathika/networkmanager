@@ -44,9 +44,15 @@ set_target_properties(${WIFI_TEST} PROPERTIES
 
 target_compile_options(${WIFI_TEST} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/INetworkManager.h)
 
-target_include_directories(${WIFI_TEST} PRIVATE ${GLIB_INCLUDE_DIRS} ${LIBNM_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS}{PROJECT_SOURCE_DIR}  ${CMAKE_CURRENT_SOURCE_DIR}
+target_include_directories(${WIFI_TEST} PRIVATE
+    ${GLIB_INCLUDE_DIRS}
+    ${LIBNM_INCLUDE_DIRS}
+    ${GIO_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}  # Correct this line
+    ${CMAKE_CURRENT_SOURCE_DIR}
     Tests
-    ${gtest_SOURCE_DIR)
+    ${gtest_SOURCE_DIR}/include  
+)
 
 target_link_libraries(${WIFI_TEST} ${NAMESPACE}Core::${NAMESPACE}Core ${GLIB_LIBRARIES} ${GIO_LIBRARIES} uuid)
 
