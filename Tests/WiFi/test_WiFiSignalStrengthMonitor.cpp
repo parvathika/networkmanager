@@ -10,6 +10,8 @@
 #include <list>
 #include <string>
 
+extern NetworkManagerImplementation* _instance;
+
 using namespace std;
 using namespace WPEFramework;
 using namespace WPEFramework::Plugin;
