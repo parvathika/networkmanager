@@ -53,6 +53,8 @@ namespace WPEFramework
                 NETMGR_PING,
                 NETMGR_TRACE,
             };
+            private:
+            	int IARMBus_status;
 
             class ConnectivityConf : public Core::JSON::Container {
                 public:
