@@ -625,13 +625,7 @@ namespace WPEFramework
 				continue;
 			}
 			IARMBus_status = 1;
-			retConnect = IARM_Bus_Connect();
-			if(retConnect != IARM_RESULT_SUCCESS)
-			{
-				NMLOG_ERROR("IARM_Bus_Connect failure");
-				usleep(500 * 1000);
-				continue;
-			}		
+			retConnect = IARM_Bus_Connect();	
 		}			
 		else if((IARMBus_status == 1) && (retConnect != IARM_RESULT_SUCCESS))
 		{
@@ -643,12 +637,6 @@ namespace WPEFramework
 				continue;
 			}
 			retIPC = IARM_Bus_Call_with_IPCTimeout(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETSRVMGR_API_isAvailable, (void *)&c, sizeof(c), (1000*10)); 
-			if (retIPC != IARM_RESULT_SUCCESS)
-			{
-				NMLOG_ERROR("threadEventRegistration: NetSrvMgr is not available. Failed to activate NetworkManager Plugin");
-				usleep(500 * 1000);
-				continue;
-			}
 		}
 			
 		else
