@@ -53,9 +53,6 @@ namespace WPEFramework
                 NETMGR_PING,
                 NETMGR_TRACE,
             };
-            private:
-            	int IARMBus_status;
-
             class ConnectivityConf : public Core::JSON::Container {
                 public:
                     ConnectivityConf& operator=(const ConnectivityConf&) = delete;
@@ -264,7 +261,7 @@ namespace WPEFramework
                 void platform_init(void);
                 void getInitialConnectionState(void);
                 void executeExternally(NetworkEvents event, const string commandToExecute, string& response);
-                void threadEventRegistration(void);
+                void threadEventRegistration(bool iarmInit, bool iarmConnect);
                 void filterScanResults(JsonArray &ssids);
                 void startWiFiSignalQualityMonitor(int interval);
                 void stopWiFiSignalQualityMonitor();
