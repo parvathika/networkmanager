@@ -607,7 +607,7 @@ namespace WPEFramework
                 NMLOG_WARNING("WARNING - cannot handle IARM events without a Network plugin instance!");
         }
 
-        void  NetworkManagerImplementation::threadEventRegistration(bool iaramInit, bool iarmconnect)
+        void  NetworkManagerImplementation::threadEventRegistration(bool iaramInit, bool iarmConnect)
         {
            uint32_t retry = 0; 
             char c;
@@ -628,7 +628,7 @@ namespace WPEFramework
 					continue;
 				}
 				NMLOG_INFO("IARM_Bus_Init retry %d: %d", retry, retInit);
-				IARMBus_status = 1;
+				iarmInit = true;
 				retConnect = IARM_Bus_Connect();	
 			}
 				
@@ -655,7 +655,7 @@ namespace WPEFramework
 				retry++;
 				continue;	
 			}	
-			NMLOG_ERROR("IARM_Bus_Call retry %d: %d", retry, retIPCtimeout);
+			NMLOG_ERROR("IARM_Bus_Call retry %d: %d", retry, retIPC);
                		 break; 		
           } while(true);
            
@@ -737,7 +737,7 @@ namespace WPEFramework
                if(iarmInit != true)
 		{
 			retInit = IARM_Bus_Init("netsrvmgr-thunder"); 
-			if((retInit != IARM_RESULT_SUCCESS && retInit != IARM_RESULT_INVALID_STATE)
+			if(retInit != IARM_RESULT_SUCCESS && retInit != IARM_RESULT_INVALID_STATE)
 			{
 				NMLOG_INFO("IARM_Bus_Init failure, retry = %d", retry);
 				usleep(500 * 1000);
@@ -766,7 +766,7 @@ namespace WPEFramework
 			usleep(500 * 1000);
 			continue;
 		}
-		NMLOG_ERROR("IARM_Bus_Call retry %d: %d", retry, retIPCtimeout);
+		NMLOG_ERROR("IARM_Bus_Call retry %d: %d", retry, retIPC);
                 break; 
 		
 		if(retIPC == IARM_RESULT_SUCCESS && retConnect == IARM_RESULT_SUCCESS && retInit == IARM_RESULT_SUCCESS)
