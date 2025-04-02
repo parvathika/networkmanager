@@ -607,7 +607,7 @@ namespace WPEFramework
                 NMLOG_WARNING("WARNING - cannot handle IARM events without a Network plugin instance!");
         }
 
-        void  NetworkManagerImplementation::threadEventRegistration(bool iaramInit, bool iarmConnect)
+        void  NetworkManagerImplementation::threadEventRegistration(bool iarmInit, bool iarmConnect)
         {
            uint32_t retry = 0; 
             char c;
