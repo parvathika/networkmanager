@@ -622,14 +622,13 @@ namespace WPEFramework
 				retInit= IARM_Bus_Init("netsrvmgr-thunder"); 
 				if(retInit != IARM_RESULT_SUCCESS && retInit != IARM_RESULT_INVALID_STATE)
 				{
-					NMLOG_ERROR("IARM_Bus_Init failure");
+					NMLOG_ERROR("IARM_Bus_Init failure, retrying. %d: %d", retry, retInit);
 					usleep(500 * 1000);
 					retry++;
 					continue;
 				}
-				NMLOG_INFO("IARM_Bus_Init retry %d: %d", retry, retInit);
 				iarmInit = true;
-				retConnect = IARM_Bus_Connect();	
+				retry = 0;
 			}
 				
 						
@@ -638,27 +637,25 @@ namespace WPEFramework
 				retConnect = IARM_Bus_Connect();
 				if(retConnect != IARM_RESULT_SUCCESS)
 				{
-					NMLOG_ERROR("IARM_Bus_Connect failure");
+					NMLOG_ERROR("IARM_Bus_Connect failure, retrying. %d: %d", retry, retConnect);
 					usleep(500 * 1000);
 					retry++;
 					continue;
 				}
-				 NMLOG_ERROR("IARM_Bus_Connect retry %d: %d", retry, retConnect);
 				 iarmConnect = true;
+				 retry = 0;
 		  	}
 		  	
 			retIPC = IARM_Bus_Call_with_IPCTimeout(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETSRVMGR_API_isAvailable, (void *)&c, sizeof(c), (1000*10)); 
 			if (retIPC != IARM_RESULT_SUCCESS)
 			{
-				NMLOG_INFO("NetSrvMgr is not available. Failed to activate NetworkManager Plugin, retry = %d", retry);
+				NMLOG_ERROR("NetSrvMgr is not available. Failed to activate NetworkManager Plugin.%d: %d", retry, retIPC);
 				usleep(500 * 1000);
 				retry++;
 				continue;	
-			}	
-			NMLOG_ERROR("IARM_Bus_Call retry %d: %d", retry, retIPC);
-               		 break; 		
+			}			
           } while(true);
-           
+           	NMLOG_INFO("threadEventRegistration successfully subscribed to IARM event for NetworkManager Plugin");
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_ENABLED_STATUS, NetworkManagerInternalEventHandler);
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_CONNECTION_STATUS, NetworkManagerInternalEventHandler);
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_IPADDRESS, NetworkManagerInternalEventHandler);
@@ -668,7 +665,7 @@ namespace WPEFramework
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_WIFI_MGR_EVENT_onError, NetworkManagerInternalEventHandler);
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_WIFI_MGR_EVENT_onAvailableSSIDs, NetworkManagerInternalEventHandler);
 
-                NMLOG_INFO("threadEventRegistration successfully subscribed to IARM event for NetworkManager Plugin");
+               // NMLOG_INFO("threadEventRegistration successfully subscribed to IARM event for NetworkManager Plugin");
                /*
                 * Read current network state and post the event.
                 * Useful if NetworkManager plugin or WPEFramework is restarted
@@ -783,6 +780,7 @@ namespace WPEFramework
            }
             else 
             {
+		NMLOG_INFO("Successfully subscribed to IARM event for NetworkManager Plugin");
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_ENABLED_STATUS, NetworkManagerInternalEventHandler);
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_CONNECTION_STATUS, NetworkManagerInternalEventHandler);
                 IARM_Bus_RegisterEventHandler(IARM_BUS_NM_SRV_MGR_NAME, IARM_BUS_NETWORK_MANAGER_EVENT_INTERFACE_IPADDRESS, NetworkManagerInternalEventHandler);
