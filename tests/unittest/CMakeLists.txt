@@ -89,6 +89,16 @@ add_executable(${NM_ROUTER_DISCOVERY_UT}
 
 add_executable(${PLUGIN_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/TestBinary.cpp
+    ${CMAKE_SOURCE_DIR}/tests/mocks/thunder/Module.cpp
+    ${CMAKE_SOURCE_DIR}/tests/mocks/Iarm.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManager.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerLogger.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerJsonRpc.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerImplementation.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerConnectivity.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/rdk/NetworkManagerRDKProxy.cpp
+    ${PROXY_STUB_SOURCES}
 )
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
