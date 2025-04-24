@@ -34,6 +34,6 @@ int main ()
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetIPSettings"), parameters, response);
     
     //Test 5:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("SetLogLevel), parameters, response);
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("SetLogLevel"), parameters, response);
 
 }
