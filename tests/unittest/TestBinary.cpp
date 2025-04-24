@@ -125,10 +125,9 @@ int main ()
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetWifiState"), parameters, response);
     
     
-    std::shared_ptr<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement>> jsonPlugin;
+    std::shared_ptr<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement>> jsonPlugin2;
     jsonPlugin2 = make_shared<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement> >("org.rdk.Network.1", "");
-    JsonObject parameters, response;
-
+  
     //Test 1:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getDefaultInterface"), parameters, response);
     
