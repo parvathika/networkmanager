@@ -73,6 +73,10 @@ endif (USE_RDK_LOGGER)
 set_target_properties(${PLUGIN_LEGACY_WIFI} PROPERTIES
                                         CXX_STANDARD 11
                                         CXX_STANDARD_REQUIRED YES)
+                                        
+if(ENABLE_CODE_COVERAGE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+endif(ENABLE_CODE_COVERAGE)
 
 install(TARGETS ${PLUGIN_LEGACY_WIFI} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${STORAGE_DIRECTORY}/plugins)
 

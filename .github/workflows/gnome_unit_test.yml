@@ -7,7 +7,7 @@ on:
     branches: [ main, develop, 'release/**', 'hotfix/**', 'feature/**'] 
 
 env:
-  THUNDER_REF: "R4.4.1"
+  THUNDER_REF: "R4.4.3"
 
 jobs:
   unit-tests:
@@ -35,6 +35,16 @@ jobs:
         run: |
           git clone https://github.com/rdkcentral/ThunderTools ThunderTools --branch ${{ env.THUNDER_REF }}
           git clone https://github.com/rdkcentral/Thunder Thunder --branch ${{ env.THUNDER_REF }}
+          
+      - name: Checkout networkmanager
+        uses: actions/checkout@v3
+        with:
+          path: networkmanager
+
+      - name: Apply Thunder Patches
+        run: |
+          cd ${{github.workspace}}/Thunder
+          git apply ${{github.workspace}}/networkmanager/tests/patches/thunder/Remove-SmartLinkType.patch
          
       - name: Build ThunderTools
         run: >
@@ -57,12 +67,7 @@ jobs:
           -DPORT=9998
           &&
           cmake --build build/Thunder --target install -j8
-
-      - name: Checkout networkmanager
-        uses: actions/checkout@v3
-        with:
-          path: networkmanager
-
+          
       - name: Build networkmanager with Gnome libnm Proxy
         run: >
           cmake
@@ -71,25 +76,59 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
-          -DCMAKE_CXX_FLAGS=" -fprofile-arcs -ftest-coverage "
+          -DCMAKE_CXX_FLAGS=" --coverage "
           -DENABLE_GNOME_NETWORKMANAGER=ON
           -DENABLE_PLUGIN_CLI=ON
+          -DENABLE_UNIT_TESTING=ON
+          -DENABLE_CODE_COVERAGE=ON
+          -DCMAKE_VERBOSE_MAKEFILE=ON
           &&
           cmake --build build/GnomeLibnmNetworkmanager --target install -j8
 
-      - name: Build networkmanager with Gnome GDBUS Proxy
+          
+      - name: Run Thunder/WPEFramework
+        run: |
+          export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
+          export PATH=${PWD}/install/usr/bin:${PATH}
+          echo "Running Thunder WPEFramework..."
+          WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json &
+          
+          sleep 2
+          WPE_PID=$(pgrep -f "WPEFramework -f")
+    
+          if [ -z "$WPE_PID" ]; then
+           echo "ERROR: Could not find WPEFramework PID!"
+           exit 1
+          fi
+    
+          echo "WPEFramework is starting with PID: $WPE_PID"
+   
+          echo "Waiting for WPEFramework to initialize and stabilize..."
+          sleep 60  
+ 
+          echo "WPEFramework is up and running with PID: $WPE_PID"
+         
+      - name: Run unit tests for plugin
         run: >
-          cmake
-          -S "${{github.workspace}}/networkmanager"
-          -B build/GnomeGdbusNetworkmanager
-          -DCMAKE_TOOLCHAIN_FILE="${{ env.TOOLCHAIN_FILE }}"
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
-          -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
-          -DCMAKE_CXX_FLAGS=" -fprofile-arcs -ftest-coverage "
-          -DENABLE_GNOME_NETWORKMANAGER=ON
-          -DENABLE_GNOME_GDBUS=ON
-          -DENABLE_PLUGIN_CLI=ON
-          &&
-          cmake --build build/GnomeGdbusNetworkmanager --target install -j8
+          PATH=${{github.workspace}}/install/usr/bin:${PATH}
+          LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
+          l3_tests
+     
+      - name: Generate coverage
+        run: |
+            lcov -c -o coverage.info -d build/GnomeLibnmNetworkmanager 
+            lcov -r coverage.info '/usr/include/*' '*/build/RDKNetworkmanager/*' \
+                                  '*/install/usr/include/*' '*/tests/*' 'googlemock/*' 'googletest/*' \
+                                  -o filtered_coverage.info
+                                  
+      - name: Generate the html report
+        run: |
+            genhtml filtered_coverage.info --output-directory /tmp/coverage_report
+
+      - name: Upload the coverage report to Pull request using actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: /tmp/coverage_report 
 
 
