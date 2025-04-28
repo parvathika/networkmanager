@@ -165,6 +165,12 @@ target_include_directories(${NM_ROUTER_DISCOVERY_UT} PRIVATE
     ${GSSDP_INCLUDE_DIRS}
 )
 
+target_include_directories(TestBinary PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${gtest_SOURCE_DIR}/include
+    ${gtest_SOURCE_DIR}/../googlemock/include
+)
+
 target_link_libraries(${NM_CLASS_UT} PRIVATE
     gmock_main
     ${NAMESPACE}Core::${NAMESPACE}Core
