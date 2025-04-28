@@ -13,16 +13,17 @@ using namespace std;
 
 int main ()
 {
-     {
+     
    Core::SystemInfo::SetEnvironment(_T("THUNDER_ACCESS"), (_T("127.0.0.1:9998")));
 
 
     std::shared_ptr<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement>> jsonPlugin;
     jsonPlugin = make_shared<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement> >("org.rdk.NetworkManager.1", "");
     JsonObject parameters, response;
-
+   
     //Test 1:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetIPSettings"), parameters, response);
+	printf("testing");
     //Test 2:
     parameters["interface"] = "test";
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetIPSettings"), parameters, response);
@@ -181,11 +182,6 @@ int main ()
     
     //Test 8:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("stopScan"), parameters, response);
-    
-    
-    
-    }
-    
-    
+      
 
 }
