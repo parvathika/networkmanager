@@ -210,6 +210,7 @@ target_link_libraries(${NM_ROUTER_DISCOVERY_UT} PRIVATE
 )
 
 target_link_libraries(TestBinary PRIVATE
+                                   gmock_main
                                    ${NAMESPACE}Core::${NAMESPACE}Core
                                    ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket)
 
