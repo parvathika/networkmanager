@@ -143,6 +143,45 @@ int main ()
     //Test 5:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getStbIp"), parameters, response);
     
+    std::shared_ptr<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement>> jsonPlugin3;
+    jsonPlugin3 = make_shared<WPEFramework::JSONRPC::LinkType<WPEFramework::Core::JSON::IElement> >("org.rdk.WiFi.1", "");
+    //Test 1:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("cancelWPSPairing"), parameters, response);
+    
+    //Test 2:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("clearSSID"), parameters, response);
+    
+    //Test 3:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
+    
+    //Test 4:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("disconnect"), parameters, response);
+    
+    //Test 5:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getConnectedSSID"), parameters, response);
+    
+     //Test 6:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getCurrentState"), parameters, response);
+    
+    //Test 7:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSID"), parameters, response);
+    
+    //Test 8:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSIDInfo"), parameters, response);
+    
+      
+    //Test 9:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getSupportedSecurityModes"), parameters, response);
+    
+     //Test 10:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("isPaired"), parameters, response);
+    
+    //Test 7:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("startScan"), parameters, response);
+    
+    //Test 8:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("stopScan"), parameters, response);
+    
     
     
     }
