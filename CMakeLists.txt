@@ -58,7 +58,10 @@ if(ENABLE_UNIT_TESTING)
     add_subdirectory(tests/unittest)
 endif(ENABLE_UNIT_TESTING)
 
-add_executable(TestBinary TestBinary.cpp)
+add_executable(TestBinary 
+    ${CMAKE_SOURCE_DIR}/tests/unittest/TestBinary.cpp
+)
+
 set_target_properties(TestBinary PROPERTIES
                                    CXX_STANDARD 11
                                    CXX_STANDARD_REQUIRED YES)
