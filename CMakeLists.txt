@@ -55,7 +55,7 @@ endif (ENABLE_LEGACY_PLUGINS)
 add_subdirectory(tools)
 
 add_executable(TestBinary TestBinary.cpp)
-set_target_properties(TestConsumer PROPERTIES
+set_target_properties(TestBinary PROPERTIES
                                    CXX_STANDARD 11
                                    CXX_STANDARD_REQUIRED YES)
 
