@@ -127,7 +127,7 @@ jobs:
                
       - name: Run unit tests for plugin
         run: |
-          cd build/tests/unittest
+          cd tests/unittest
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
           LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
           ./TestBinary
