@@ -68,6 +68,8 @@ set_target_properties(TestBinary PROPERTIES
 
 if(ENABLE_CODE_COVERAGE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+   target_compile_options(TestBinary PRIVATE --coverage)
+   target_link_options(TestBinary PRIVATE --coverage)
 endif(ENABLE_CODE_COVERAGE)
 
 include_directories(${PROJECT_SOURCE_DIR}/interface)

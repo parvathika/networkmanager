@@ -126,10 +126,11 @@ jobs:
           routerDiscovery_tests    
                
       - name: Run unit tests for plugin
-        run: >
+        run: |
+          cd build/tests/unittest
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
           LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
-          TestBinary  
+          ./TestBinary
           
       - name: Generate coverage
         run: |
