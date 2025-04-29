@@ -20,6 +20,8 @@ cmake_minimum_required(VERSION 3.3)
 
 project(NetworkManager)
 find_package(WPEFramework)
+find_package(WPEFrameworkCore REQUIRED)
+find_package(WPEFrameworkWebSocket REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(VERSION_MAJOR 0)
@@ -52,7 +54,27 @@ endif (ENABLE_LEGACY_PLUGINS)
 
 add_subdirectory(tools)
 
+add_executable(TestBinary TestBinary.cpp)
+set_target_properties(TestConsumer PROPERTIES
+                                   CXX_STANDARD 11
+                                   CXX_STANDARD_REQUIRED YES)
+
 if(ENABLE_UNIT_TESTING)
     add_subdirectory(tests/unittest)
 endif(ENABLE_UNIT_TESTING)
 
+if(ENABLE_CODE_COVERAGE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+endif(ENABLE_CODE_COVERAGE)
+
+include_directories(${PROJECT_SOURCE_DIR}/interface)
+include_directories(${PROJECT_SOURCE_DIR}/plugin)
+include_directories(${PROJECT_SOURCE_DIR}/legacy)
+include_directories(${PROJECT_SOURCE_DIR}/tests/mocks)
+include_directories(${PROJECT_SOURCE_DIR}/tests/mocks/thunder)
+
+target_link_libraries(TestBinary PRIVATE
+                                   ${NAMESPACE}Core::${NAMESPACE}Core
+                                   ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket)
+
+install(TARGETS TestBinary DESTINATION bin)

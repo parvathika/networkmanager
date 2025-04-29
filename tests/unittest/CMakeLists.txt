@@ -85,7 +85,6 @@ add_executable(${NM_ROUTER_DISCOVERY_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
 )
-add_executable(TestBinary TestBinary.cpp)
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
@@ -110,10 +109,6 @@ set_target_properties(${NM_ROUTER_DISCOVERY_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
-
-set_target_properties(TestBinary PROPERTIES
-                                   CXX_STANDARD 11
-                                   CXX_STANDARD_REQUIRED YES)
 
 target_compile_options(${NM_CLASS_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_RDKPROXY_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
@@ -165,12 +160,6 @@ target_include_directories(${NM_ROUTER_DISCOVERY_UT} PRIVATE
     ${GSSDP_INCLUDE_DIRS}
 )
 
-target_include_directories(TestBinary PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${gtest_SOURCE_DIR}/include
-    ${gtest_SOURCE_DIR}/../googlemock/include
-)
-
 target_link_libraries(${NM_CLASS_UT} PRIVATE
     gmock_main
     ${NAMESPACE}Core::${NAMESPACE}Core
@@ -209,15 +198,8 @@ target_link_libraries(${NM_ROUTER_DISCOVERY_UT} PRIVATE
       ${GSSDP_LIBRARIES}
 )
 
-target_link_libraries(TestBinary PRIVATE
-                                   gmock_main
-                                   ${NAMESPACE}Core::${NAMESPACE}Core
-                                   ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket)
-
-
 install(TARGETS ${NM_CLASS_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_RDKPROXY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_WIFI_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_NETWORK_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_ROUTER_DISCOVERY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-install(TARGETS TestBinary DESTINATION bin)
