@@ -23,7 +23,7 @@ set(NM_RDKPROXY_UT "rdkproxy_tests")
 set(NM_LEGACY_WIFI_UT "legacywifi_tests")
 set(NM_LEGACY_NETWORK_UT "legacynetwork_tests")
 set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")
-//set(PLUGIN_UT "plugin_tests")
+set(PLUGIN_UT "plugin_tests")
 
 find_package(${NAMESPACE}Core REQUIRED)
 find_package(${NAMESPACE}Plugins REQUIRED)
