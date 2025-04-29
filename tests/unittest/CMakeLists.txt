@@ -23,11 +23,17 @@ set(NM_RDKPROXY_UT "rdkproxy_tests")
 set(NM_LEGACY_WIFI_UT "legacywifi_tests")
 set(NM_LEGACY_NETWORK_UT "legacynetwork_tests")
 set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")
+//set(PLUGIN_UT "plugin_tests")
 
 find_package(${NAMESPACE}Core REQUIRED)
 find_package(${NAMESPACE}Plugins REQUIRED)
 find_package(CURL)
 find_package(PkgConfig REQUIRED)
+
+find_package(WPEFramework REQUIRED)
+find_package(WPEFrameworkCore REQUIRED)
+find_package(WPEFrameworkWebSocket REQUIRED)
+
 #pkg_check_modules(GLIB REQUIRED glib-2.0)
 #pkg_check_modules(GIO REQUIRED gio-2.0)
 #pkg_check_modules(LIBNM REQUIRED libnm)
@@ -81,6 +87,20 @@ add_executable(${NM_ROUTER_DISCOVERY_UT}
     ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
 )
 
+add_executable(${PLUGIN_UT}
+    ${CMAKE_SOURCE_DIR}/tests/unittest/TestBinary.cpp
+    ${CMAKE_SOURCE_DIR}/tests/mocks/thunder/Module.cpp
+    ${CMAKE_SOURCE_DIR}/tests/mocks/Iarm.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManager.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerLogger.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerJsonRpc.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerImplementation.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerConnectivity.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
+    ${CMAKE_SOURCE_DIR}/plugin/rdk/NetworkManagerRDKProxy.cpp
+    ${PROXY_STUB_SOURCES}
+)
+
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
@@ -105,10 +125,15 @@ set_target_properties(${NM_ROUTER_DISCOVERY_UT} PROPERTIES
     CXX_STANDARD_REQUIRED YES
 )
 
+set_target_properties(${PLUGIN_UT} PROPERTIES
+                                   CXX_STANDARD 11
+                                   CXX_STANDARD_REQUIRED YES)
+
 target_compile_options(${NM_CLASS_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_RDKPROXY_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_LEGACY_WIFI_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_LEGACY_NETWORK_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
+target_compile_options(${PLUGIN_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 
@@ -193,8 +218,16 @@ target_link_libraries(${NM_ROUTER_DISCOVERY_UT} PRIVATE
       ${GSSDP_LIBRARIES}
 )
 
+target_link_libraries(${PLUGIN_UT} PRIVATE
+       ${NAMESPACE}Core::${NAMESPACE}Core
+       ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket)
+
+
 install(TARGETS ${NM_CLASS_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_RDKPROXY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_WIFI_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_NETWORK_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_ROUTER_DISCOVERY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS ${PLUGIN_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
+

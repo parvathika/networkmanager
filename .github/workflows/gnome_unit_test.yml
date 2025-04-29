@@ -72,6 +72,7 @@ jobs:
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/install/usr"
           -DCMAKE_MODULE_PATH="${{github.workspace}}/install/tools/cmake"
           -DCMAKE_CXX_FLAGS=" -fprofile-arcs -ftest-coverage "
+          -DCMAKE_CXX_FLAGS=" --coverage "
           -DENABLE_GNOME_NETWORKMANAGER=ON
           -DENABLE_PLUGIN_CLI=ON
           &&
@@ -91,5 +92,21 @@ jobs:
           -DENABLE_PLUGIN_CLI=ON
           &&
           cmake --build build/GnomeGdbusNetworkmanager --target install -j8
+          
+   
+      - name: run networkmanager with Gnome Proxy
+	run: |
+	  export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
+	  export PATH=${PWD}/install/usr/bin:${PATH}
+	  rm -f ${PWD}/install/etc/WPEFramework/plugins/LegacyPlugin*.*
+	  WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json  
+	         
+      - name: Run unit tests for plugin
+        run: >
+          PATH=${{github.workspace}}/install/usr/bin:${PATH}
+          LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
+          plugin_tests
+          
+       
 
 
