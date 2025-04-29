@@ -151,7 +151,7 @@ int main ()
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetCaptivePortalURI"), parameters, response);
     
     //Test 35:
-    parameters["uri"] = "http://10.0.0.1/captiveportal.jst;
+    parameters["uri"] = "http://10.0.0.1/captiveportal.jst";
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("GetCaptivePortalURI"), parameters, response);
     
     //Test 36:
