@@ -98,6 +98,8 @@ add_executable(${PLUGIN_UT}
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerConnectivity.cpp
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
     ${CMAKE_SOURCE_DIR}/plugin/rdk/NetworkManagerRDKProxy.cpp
+    ${CMAKE_SOURCE_DIR}/legacy/LegacyWiFiManagerAPIs.cpp
+    ${CMAKE_SOURCE_DIR}/legacy/LegacyNetworkAPIs.cpp
     ${PROXY_STUB_SOURCES}
 )
 
