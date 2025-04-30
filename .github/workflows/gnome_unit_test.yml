@@ -95,12 +95,12 @@ jobs:
           cmake --build build/GnomeGdbusNetworkmanager --target install -j8
           
       - name: run networkmanager with Gnome Proxy
-  	run: >
-    	  export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
-    	  export PATH=${PWD}/install/usr/bin:${PATH}
-    	  rm -f ${PWD}/install/etc/WPEFramework/plugins/LegacyPlugin*.*
-    	  WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json
-	         
+        run: |
+          export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
+          export PATH=${PWD}/install/usr/bin:${PATH}
+          rm -f ${PWD}/install/etc/WPEFramework/plugins/LegacyPlugin*.*
+          WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json
+	  
       - name: Run unit tests for plugin
         run: >
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
