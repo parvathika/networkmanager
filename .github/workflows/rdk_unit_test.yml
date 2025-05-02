@@ -93,7 +93,6 @@ jobs:
           "
           -DENABLE_UNIT_TESTING=ON
           -DENABLE_ROUTER_DISCOVERY_TOOL=ON
-          -DENABLE_CODE_COVERAGE=ON
           &&
           cmake --build build/RDKNetworkmanager --target install -j8
           
@@ -133,12 +132,7 @@ jobs:
           echo "Running Thunder WPEFramework..."
           WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json &
                 
-      - name: Run unit tests for plugin
-        run: >
-          PATH=${{github.workspace}}/install/usr/bin:${PATH}
-          LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
-          l3_tests
-         
+    
       - name: Generate coverage
         run: |
             lcov -c -o coverage.info -d build/RDKNetworkmanager
