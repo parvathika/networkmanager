@@ -132,9 +132,7 @@ jobs:
           export PATH=${PWD}/install/usr/bin:${PATH}
           echo "Running Thunder WPEFramework..."
           WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json & 
-          WPEFRAMEWORK_PID=$!
-          echo "WPEFramework PID: $WPEFRAMEWORK_PID"   
-               
+                
       - name: Run unit tests for plugin
         run: >
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
