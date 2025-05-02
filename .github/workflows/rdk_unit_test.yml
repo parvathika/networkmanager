@@ -90,7 +90,6 @@ jobs:
           -I ${{github.workspace}}/networkmanager/tests/headers
           -I ${{github.workspace}}/networkmanager/tests/headers/rdk/iarmbus
           --include ${{github.workspace}}/networkmanager/tests/mocks/Iarm.h
-          "
           -DENABLE_UNIT_TESTING=ON
           -DENABLE_ROUTER_DISCOVERY_TOOL=ON
           -DENABLE_CODE_COVERAGE=ON
