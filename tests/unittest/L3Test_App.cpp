@@ -1,11 +1,11 @@
 #ifndef MODULE_NAME
-#define MODULE_NAME TestBinary
+#define MODULE_NAME L3Test
 #endif /* MODULE_NAME */
 
 #include <core/core.h>
 #include <websocket/websocket.h>
 
-MODULE_NAME_DECLARATION("MyTestBinary")
+MODULE_NAME_DECLARATION("L3Test")
 
 using namespace WPEFramework;
 using namespace std;

@@ -20,8 +20,6 @@ cmake_minimum_required(VERSION 3.3)
 
 project(NetworkManager)
 find_package(WPEFramework)
-find_package(WPEFrameworkCore REQUIRED)
-find_package(WPEFrameworkWebSocket REQUIRED)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(VERSION_MAJOR 0)
@@ -42,7 +40,8 @@ get_directory_property(SEVICES_DEFINES COMPILE_DEFINITIONS)
 option(ENABLE_LEGACY_PLUGINS "Enable Legacy Plugins" ON)
 option(USE_RDK_LOGGER "Enable RDK Logger for logging" OFF )
 option(ENABLE_UNIT_TESTING "Enable unit tests" OFF)
-
+option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
+ 
 
 add_subdirectory(interface)
 add_subdirectory(definition)
@@ -54,32 +53,15 @@ endif (ENABLE_LEGACY_PLUGINS)
 
 add_subdirectory(tools)
 
+if(ENABLE_CODE_COVERAGE)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
+endif(ENABLE_CODE_COVERAGE)
+
 if(ENABLE_UNIT_TESTING)
     add_subdirectory(tests/unittest)
 endif(ENABLE_UNIT_TESTING)
 
-add_executable(TestBinary 
-    ${CMAKE_SOURCE_DIR}/tests/unittest/TestBinary.cpp
-)
 
-set_target_properties(TestBinary PROPERTIES
-                                   CXX_STANDARD 11
-                                   CXX_STANDARD_REQUIRED YES)
 
-if(ENABLE_CODE_COVERAGE)
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-   target_compile_options(TestBinary PRIVATE --coverage)
-   target_link_options(TestBinary PRIVATE --coverage)
-endif(ENABLE_CODE_COVERAGE)
 
-include_directories(${PROJECT_SOURCE_DIR}/interface)
-include_directories(${PROJECT_SOURCE_DIR}/plugin)
-include_directories(${PROJECT_SOURCE_DIR}/legacy)
-include_directories(${PROJECT_SOURCE_DIR}/tests/mocks)
-include_directories(${PROJECT_SOURCE_DIR}/tests/mocks/thunder)
 
-target_link_libraries(TestBinary PRIVATE
-                                   ${NAMESPACE}Core::${NAMESPACE}Core
-                                   ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket)
-
-install(TARGETS TestBinary DESTINATION bin)
