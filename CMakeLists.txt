@@ -55,7 +55,6 @@ add_subdirectory(tools)
 
 if(ENABLE_CODE_COVERAGE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-   add_subdirectory(tests/unittest)
 endif(ENABLE_CODE_COVERAGE)
 
 if(ENABLE_UNIT_TESTING)
