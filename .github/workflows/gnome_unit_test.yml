@@ -91,5 +91,12 @@ jobs:
           -DENABLE_PLUGIN_CLI=ON
           &&
           cmake --build build/GnomeGdbusNetworkmanager --target install -j8
+          
+      - name: Run Thunder/WPEFramework
+        run: |
+          export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
+          export PATH=${PWD}/install/usr/bin:${PATH}
+          echo "Running Thunder WPEFramework..."
+          WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json 
 
 
