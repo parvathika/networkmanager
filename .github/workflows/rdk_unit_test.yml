@@ -140,13 +140,7 @@ jobs:
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
           LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
           l3_tests
-          
-        always: |
-    	  if [ -n "$WPEFRAMEWORK_PID" ]; then
-             echo "Terminating WPEFramework (PID: $WPEFRAMEWORK_PID)"
-             kill -9 $WPEFRAMEWORK_PID
-          fi
-          
+         
       - name: Generate coverage
         run: |
             lcov -c -o coverage.info -d build/RDKNetworkmanager
