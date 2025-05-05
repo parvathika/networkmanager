@@ -63,7 +63,7 @@ jobs:
             touch install/usr/lib/libIARMBus.so 
             mkdir -p install/usr/include/rdk/iarmbus
             touch install/usr/include/rdk/iarmbus/libIARM.h
-            cd "${{github.workspace}}/networkmanager/tests/"
+            cd "${{github.workspace}}/tests/"
             mkdir -p headers/rdk/iarmbus
             cd headers
             touch rdk/iarmbus/libIARM.h rdk/iarmbus/libIBus.h
