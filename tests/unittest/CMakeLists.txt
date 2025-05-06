@@ -23,6 +23,10 @@ set(NM_RDKPROXY_UT "rdkproxy_tests")
 set(NM_LEGACY_WIFI_UT "legacywifi_tests")
 set(NM_LEGACY_NETWORK_UT "legacynetwork_tests")
 set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")
+
+set(ROUTER_DISCOVERY_SOURCES
+    ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
+)
 set(FUNCTIONALITY_TEST "l3_tests")
 
 find_package(${NAMESPACE}Core REQUIRED)
@@ -81,24 +85,19 @@ add_executable(${NM_LEGACY_NETWORK_UT}
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerLogger.cpp
     ${CMAKE_SOURCE_DIR}/legacy/LegacyNetworkAPIs.cpp
 )
-
-add_executable(${NM_ROUTER_DISCOVERY_UT}
-    ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
-    ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
-)
-
 add_executable(${FUNCTIONALITY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/unittest/L3Test_App.cpp
 )
 
-
-if(EXCLUDE_UPNP_TESTS)
-    target_sources(${NM_ROUTER_DISCOVERY_UT}
-        PRIVATE
-            REMOVE_FILE
-                ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
+if(NOT EXCLUDE_UPNP_TESTS)
+    list(APPEND ROUTER_DISCOVERY_SOURCES
+        ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     )
 endif()
+
+add_executable(${NM_ROUTER_DISCOVERY_UT}
+    ${ROUTER_DISCOVERY_SOURCES}
+)
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
