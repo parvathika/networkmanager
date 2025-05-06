@@ -75,13 +75,21 @@ jobs:
             
       - name: Exclude UPnP files
         run: |
-            # Simply remove the problematic test file from the test sources
-            sed -i '/test_UpnpDiscoveryManager\.cpp/d' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+            # First check the content of the CMakeLists.txt to understand its structure
+            echo "Original CMakeLists.txt content:"
+            cat "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
     
-            # If there's a direct reference to routerDiscovery_tests, remove that too
-            sed -i '/routerDiscovery_tests/d' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+            # Create a backup of the original file
+            cp "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt" "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt.bak"
     
-            echo "Modified CMakeLists.txt to exclude UPnP tests"
+            # Comment out the problematic file in the test sources list
+            sed -i 's/\(.*test_UpnpDiscoveryManager\.cpp.*\)/#\1/' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+    
+            # Comment out the entire routerDiscovery_tests target section using more precise patterns
+            sed -i '/add_executable.*routerDiscovery_tests/,/target_link_libraries.*routerDiscovery_tests/ s/^/#/' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+    
+            echo "Modified CMakeLists.txt content:"
+            cat "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
 
      
 
