@@ -92,17 +92,11 @@ add_executable(${FUNCTIONALITY_TEST}
 )
 
 
-if(EXCLUDE_UPNP_TESTS)
-    target_sources(${NM_ROUTER_DISCOVERY_UT}
-        PRIVATE
-            "$<NOT:$<COMPILE_LANGUAGE:CXX>>" # This line is a no-op for C++
-            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/tests/unittest>" # Ensure interface path is set
-            "$<INSTALL_INTERFACE:>"
-        REMOVE_FILE
-            ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
+if(NOT EXCLUDE_UPNP_TESTS)
+    list(APPEND ROUTER_DISCOVERY_SOURCES
+        ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     )
 endif()
-
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
