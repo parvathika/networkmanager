@@ -91,6 +91,7 @@ jobs:
           -DENABLE_GNOME_NETWORKMANAGER=ON
           -DENABLE_PLUGIN_CLI=ON
           -DENABLE_UNIT_TESTING=ON
+          -DENABLE_ROUTER_DISCOVERY_TOOL=OFF
           -DENABLE_CODE_COVERAGE=ON
           &&
           cmake --build build/GnomeLibnmNetworkmanager --target install -j8
