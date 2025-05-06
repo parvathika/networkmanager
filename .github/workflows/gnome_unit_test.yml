@@ -75,21 +75,28 @@ jobs:
             
       - name: Exclude UPnP files
         run: |
-            # First check the content of the CMakeLists.txt to understand its structure
-            echo "Original CMakeLists.txt content:"
-            cat "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
-    
-            # Create a backup of the original file
-            cp "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt" "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt.bak"
-    
-            # Comment out the problematic file in the test sources list
-            sed -i 's/\(.*test_UpnpDiscoveryManager\.cpp.*\)/#\1/' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
-    
-            # Comment out the entire routerDiscovery_tests target section using more precise patterns
-            sed -i '/add_executable.*routerDiscovery_tests/,/target_link_libraries.*routerDiscovery_tests/ s/^/#/' "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
-    
-            echo "Modified CMakeLists.txt content:"
-            cat "${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+          # Path to the CMakeLists.txt file
+          CMAKE_FILE="${{github.workspace}}/networkmanager/tests/unittest/CMakeLists.txt"
+
+          # Create a backup of the original file
+          cp "$CMAKE_FILE" "$CMAKE_FILE.bak"
+
+          # Print original content for debugging
+          echo "Original CMakeLists.txt content:"
+          cat "$CMAKE_FILE"
+
+          # Comment out any line containing test_UpnpDiscoveryManager.cpp
+          sed -i '/test_UpnpDiscoveryManager\.cpp/ s/^/#/' "$CMAKE_FILE"
+
+          # Comment out any line containing UpnpDiscoveryManager.cpp (in case it's explicitly listed)
+          sed -i '/UpnpDiscoveryManager\.cpp/ s/^/#/' "$CMAKE_FILE"
+
+          # Comment out the entire routerDiscovery_tests target block
+          sed -i '/add_executable.*routerDiscovery_tests/,/target_link_libraries.*routerDiscovery_tests/ s/^/#/' "$CMAKE_FILE"
+
+          # Print modified content for verification
+          echo "Modified CMakeLists.txt content:"
+          cat "$CMAKE_FILE"
 
      
 
