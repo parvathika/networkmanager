@@ -23,10 +23,6 @@ set(NM_RDKPROXY_UT "rdkproxy_tests")
 set(NM_LEGACY_WIFI_UT "legacywifi_tests")
 set(NM_LEGACY_NETWORK_UT "legacynetwork_tests")
 set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")
-
-set(ROUTER_DISCOVERY_SOURCES
-    ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
-)
 set(FUNCTIONALITY_TEST "l3_tests")
 
 find_package(${NAMESPACE}Core REQUIRED)
@@ -88,16 +84,12 @@ add_executable(${NM_LEGACY_NETWORK_UT}
 add_executable(${FUNCTIONALITY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/unittest/L3Test_App.cpp
 )
-
-if(NOT EXCLUDE_UPNP_TESTS)
-    list(APPEND ROUTER_DISCOVERY_SOURCES
-        ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
-    )
-endif()
-
+if(ENABLE_ROUTER_DISCOVERY_TOOL)
 add_executable(${NM_ROUTER_DISCOVERY_UT}
-    ${ROUTER_DISCOVERY_SOURCES}
+    ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
+    ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
 )
+
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
@@ -171,6 +163,8 @@ target_include_directories(${NM_LEGACY_NETWORK_UT} PRIVATE
     ${gtest_SOURCE_DIR}/include  
     ${gtest_SOURCE_DIR}/../googlemock/include
 )
+
+if(ENABLE_ROUTER_DISCOVERY_TOOL)
 target_include_directories(${NM_ROUTER_DISCOVERY_UT} PRIVATE
     ${PROJECT_SOURCE_DIR}/tools/upnp
     ${GUPNP_INCLUDE_DIRS}
