@@ -84,12 +84,13 @@ add_executable(${NM_LEGACY_NETWORK_UT}
 add_executable(${FUNCTIONALITY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/unittest/L3Test_App.cpp
 )
+
 if(ENABLE_ROUTER_DISCOVERY_TOOL)
 add_executable(${NM_ROUTER_DISCOVERY_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
 )
-
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)
 
 set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
@@ -172,6 +173,7 @@ target_include_directories(${NM_ROUTER_DISCOVERY_UT} PRIVATE
     ${LIBSOUP_INCLUDE_DIRS}
     ${GSSDP_INCLUDE_DIRS}
 )
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)
 
 target_link_libraries(${NM_CLASS_UT} PRIVATE
     gmock_main
