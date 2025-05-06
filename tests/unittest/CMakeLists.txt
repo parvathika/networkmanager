@@ -92,9 +92,11 @@ add_executable(${FUNCTIONALITY_TEST}
 )
 
 
-if(NOT EXCLUDE_UPNP_TESTS)
-    list(APPEND ROUTER_DISCOVERY_SOURCES
-        ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
+if(EXCLUDE_UPNP_TESTS)
+    target_sources(${NM_ROUTER_DISCOVERY_UT}
+        PRIVATE
+            REMOVE_FILE
+                ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     )
 endif()
 
