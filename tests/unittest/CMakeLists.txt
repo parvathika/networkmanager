@@ -54,6 +54,7 @@ add_executable(${NM_CLASS_UT}
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
 )
 
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 add_executable(${NM_RDKPROXY_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_NetworkManager.cpp
     ${CMAKE_SOURCE_DIR}/tests/mocks/thunder/Module.cpp
@@ -67,6 +68,7 @@ add_executable(${NM_RDKPROXY_UT}
     ${CMAKE_SOURCE_DIR}/plugin/rdk/NetworkManagerRDKProxy.cpp
     ${PROXY_STUB_SOURCES}
 )
+endif()
 
 add_executable(${NM_LEGACY_WIFI_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_LegacyPlugin_WiFiManagerAPIs.cpp
@@ -97,10 +99,12 @@ set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD_REQUIRED YES
 )
 
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 set_target_properties(${NM_RDKPROXY_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
+endif()
 
 set_target_properties(${NM_LEGACY_WIFI_UT} PROPERTIES
     CXX_STANDARD 11
@@ -125,7 +129,11 @@ set_target_properties(${FUNCTIONALITY_TEST} PROPERTIES
 )
 
 target_compile_options(${NM_CLASS_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
+
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 target_compile_options(${NM_RDKPROXY_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
+endif()
+
 target_compile_options(${NM_LEGACY_WIFI_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_LEGACY_NETWORK_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${FUNCTIONALITY_TEST} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
@@ -148,6 +156,7 @@ target_include_directories(${NM_CLASS_UT} PRIVATE
     ${gtest_SOURCE_DIR}/../googlemock/include
 )
 
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 target_include_directories(${NM_RDKPROXY_UT} PRIVATE
     ${CURL_INCLUDE_DIRS}
     ${IARMBUS_INCLUDE_DIRS}
@@ -156,6 +165,8 @@ target_include_directories(${NM_RDKPROXY_UT} PRIVATE
     ${gtest_SOURCE_DIR}/../googlemock/include
     ${CMAKE_CURRENT_SOURCE_DIR}/install/usr/include/rdk/iarmbus
 )
+endif()
+
 target_include_directories(${NM_LEGACY_WIFI_UT} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${gtest_SOURCE_DIR}/include  
@@ -187,6 +198,7 @@ target_link_libraries(${NM_CLASS_UT} PRIVATE
     ${CURL_LIBRARIES}
 )
 
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 target_link_libraries(${NM_RDKPROXY_UT} PRIVATE
     gmock_main
     ${NAMESPACE}Core::${NAMESPACE}Core
@@ -194,6 +206,8 @@ target_link_libraries(${NM_RDKPROXY_UT} PRIVATE
     ${CURL_LIBRARIES}
     ${IARMBUS_LIBRARIES}
 )
+endif()
+
 target_link_libraries(${NM_LEGACY_WIFI_UT} PRIVATE
      gmock_main 
       ${NAMESPACE}Core::${NAMESPACE}Core
@@ -224,7 +238,10 @@ target_link_libraries(${FUNCTIONALITY_TEST} PRIVATE
 )
 
 install(TARGETS ${NM_CLASS_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 install(TARGETS ${NM_RDKPROXY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+endif()
+
 install(TARGETS ${NM_LEGACY_WIFI_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_NETWORK_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
