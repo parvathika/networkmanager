@@ -5,7 +5,7 @@
 #include <core/core.h>
 #include <websocket/websocket.h>
 
-MODULE_NAME_DECLARATION("L3Test")
+MODULE_NAME_DECLARATION("l3_tests")
 
 using namespace WPEFramework;
 using namespace std;
@@ -434,6 +434,7 @@ int main ()
     
     //Test 3:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
+    
     //Test 4:
     parameters["ssid"] = "123412341234";
     parameters["passphrase"] = "password"
@@ -444,54 +445,124 @@ int main ()
     parameters["passphrase"] = "password"
     parameters["securityMode"] = 99; 
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
-    
     //Test 6:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("disconnect"), parameters, response);
+    parameters["ssid"] = "myssid";
+    parameters["passphrase"] = "password"
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
     //Test 7:
-    parameters["result"] = "0";
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("disconnect"), parameters, response);
-    
+    parameters["securityMode"] = 99; 
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
     //Test 8:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getConnectedSSID"), parameters, response);
+    parameters["ssid"] = "myssid";
+    parameters["securityMode"] = 99; 
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("connect"), parameters, response);
     
     //Test 9:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getCurrentState"), parameters, response);
-    //Test 14:
-    parameters["state"] = "1";
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getCurrentState"), parameters, response);
-    //Test 15:
-    parameters["state"] = "2";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("disconnect"), parameters, response);
+    
+    //Test 10:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getConnectedSSID"), parameters, response);
+    
+    //Test 11:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getCurrentState"), parameters, response);
     
-    //Test 16:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSID"), parameters, response);
-    //Test 17:
-    parameters["ssid"] = "123412341234";
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSID"), parameters, response);
-    //Test 18:
-    parameters["ssid"] = "myssid";
+    //Test 12:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSID"), parameters, response);
     
-    //Test 19:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSIDInfo"), parameters, response);
-    //Test 20:
-    parameters["ssid"] = "123412341234";
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSIDInfo"), parameters, response);
-    //Test 21:
-    parameters["ssid"] = "myssid";
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSIDInfo"), parameters, response);
-    
+    //Test 13:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getPairedSSIDInfo"), parameters, response); 
       
-    //Test 22:
+    //Test 14:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("getSupportedSecurityModes"), parameters, response);
     
-     //Test 23:
+    //Test 15:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    //Test 16:
+    parameters["method"] = "PIN";
+    parameters["wps_pin"] = "12345678";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    //Test 17:
+    parameters["method"] = "PIN";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    //Test 18:
+    parameters["method"] = "";
+    parameters["wps_pin"] = "12345678";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    //Test 19:
+    parameters["method"] = "PIN";
+    parameters["wps_pin"] = "1234abcd";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    //Test 20:
+    parameters["wps_pin"] = "12345678";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("initiateWPSPairing");
+    
+    //Test 21:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("isPaired"), parameters, response);
     
-    //Test 24:
-    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("startScan"), parameters, response);
+    //Test 22:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("isSignalThresholdChangeEnabled"), parameters, response);
     
+    //Test 23:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
+    //Test 24:
+    parameters["ssid"] = "TestNetwork";
+    parameters["passphrase"] = "securePassword123";
+    parameters["securityMode"] = 2;
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
     //Test 25:
+    parameters["ssid"] = "";
+    parameters["passphrase"] = "securePassword123";
+    parameters["securityMode"] = 2;
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
+    //Test 26:
+    parameters["ssid"] = "TestNetwork";
+    parameters["passphrase"] = "securePassword123";
+    parameters["securityMode"] = 99;   //inavlid mode
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
+    //Test 27:
+    parameters["ssid"] = "TestNetwork";
+    parameters["securityMode"] = 2;
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
+    //Test 28:
+    parameters["securityMode"] = 2;
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.saveSSID"), parameters, response);
+     
+    //Test 29:
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("startScan"), parameters, response);
+    //Test 30:
+    parameters["incremental"] = false;
+    parameters["ssid"] = "";
+    parameters["frequency"] = "";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 31:
+    parameters["incremental"] = true;
+    parameters["ssid"] = "myssid";
+    parameters["frequency"] = "";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 32:
+    parameters["incremental"] = false;
+    parameters["ssid"] = "myssid";
+    parameters["frequency"] = "2412";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 33:
+    parameters["incremental"] = true;
+    parameters["ssid"] = "myssid";
+    parameters["frequency"] = "5200";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 34:
+    parameters["frequency"] = "5200";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 35:
+    parameters["incremental"] = true;
+    parameters["frequency"] = "5200";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    //Test 36:
+    parameters["incremental"] = true;
+    parameters["ssid"] = "myssid";
+    parameters["frequency"] = "abc";
+    jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("org.rdk.Wifi.startScan"), parameters, response);
+    
+    //Test 37:
     jsonPlugin->Invoke<JsonObject, JsonObject>(5000, _T("stopScan"), parameters, response);
       
 
