@@ -91,7 +91,7 @@ jobs:
           export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
           export PATH=${PWD}/install/usr/bin:${PATH}
           echo "Running Thunder WPEFramework..."
-          WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json &
+          WPEFramework -b -c ${PWD}/install/etc/WPEFramework/config.json 
           
           sleep 2
           WPE_PID=$(pgrep -f "WPEFramework -f")
@@ -104,7 +104,7 @@ jobs:
           echo "WPEFramework is starting with PID: $WPE_PID"
    
           echo "Waiting for WPEFramework to initialize and stabilize..."
-          sleep 60  
+          sleep 3  
  
           echo "WPEFramework is up and running with PID: $WPE_PID"
          
@@ -113,6 +113,10 @@ jobs:
           PATH=${{github.workspace}}/install/usr/bin:${PATH}
           LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
           l3_tests
+
+      - name: stop wpeframework
+        run: |
+            killall -15 WPEFramework
      
       - name: Generate coverage
         run: |
