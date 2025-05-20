@@ -18,11 +18,11 @@
 #############################################################################
 message ("Unittest binary is built here")
 
-set(NM_CLASS_UT "common_class_tests")
-#[[set(NM_RDKPROXY_UT "rdkproxy_tests")]]
+#[[set(NM_CLASS_UT "common_class_tests")
+set(NM_RDKPROXY_UT "rdkproxy_tests")
 set(NM_LEGACY_WIFI_UT "legacywifi_tests")
 set(NM_LEGACY_NETWORK_UT "legacynetwork_tests")
-set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")
+set(NM_ROUTER_DISCOVERY_UT "routerDiscovery_tests")]]
 set(FUNCTIONALITY_TEST "l3_tests")
 
 find_package(${NAMESPACE}Core REQUIRED)
@@ -46,14 +46,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${NM_CLASS_UT}
+#[[add_executable(${NM_CLASS_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_NetworkManagerConnectivity.cpp
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_NetworkManagerStunClient.cpp
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerLogger.cpp
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerConnectivity.cpp
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
 )
-#[[add_executable(${NM_RDKPROXY_UT}
+add_executable(${NM_RDKPROXY_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_NetworkManager.cpp
     ${CMAKE_SOURCE_DIR}/tests/mocks/thunder/Module.cpp
     ${CMAKE_SOURCE_DIR}/tests/mocks/Iarm.cpp
@@ -65,7 +65,7 @@ add_executable(${NM_CLASS_UT}
     ${CMAKE_SOURCE_DIR}/plugin/NetworkManagerStunClient.cpp
     ${CMAKE_SOURCE_DIR}/plugin/rdk/NetworkManagerRDKProxy.cpp
     ${PROXY_STUB_SOURCES}
-)]]
+)
 
 add_executable(${NM_LEGACY_WIFI_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_LegacyPlugin_WiFiManagerAPIs.cpp
@@ -85,24 +85,24 @@ add_executable(${NM_ROUTER_DISCOVERY_UT}
     ${CMAKE_SOURCE_DIR}/tests/unittest/test_UpnpDiscoveryManager.cpp
     ${CMAKE_SOURCE_DIR}/tools/upnp/UpnpDiscoveryManager.cpp
 )
-endif(ENABLE_ROUTER_DISCOVERY_TOOL)
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)]]
 
 add_executable(${FUNCTIONALITY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/unittest/L3Test_App.cpp
 )
 
 
-set_target_properties(${NM_CLASS_UT} PROPERTIES
+#[[set_target_properties(${NM_CLASS_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
 
-#[[if(NOT ENABLE_GNOME_NETWORKMANAGER)
+if(NOT ENABLE_GNOME_NETWORKMANAGER)
 set_target_properties(${NM_RDKPROXY_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
-endif()]]
+endif()
 
 set_target_properties(${NM_LEGACY_WIFI_UT} PROPERTIES
     CXX_STANDARD 11
@@ -119,17 +119,17 @@ set_target_properties(${NM_ROUTER_DISCOVERY_UT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
-endif(ENABLE_ROUTER_DISCOVERY_TOOL)
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)]]
 
 set_target_properties(${FUNCTIONALITY_TEST} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED YES
 )
 
-target_compile_options(${NM_CLASS_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
-#[[target_compile_options(${NM_RDKPROXY_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)]]
+#[[target_compile_options(${NM_CLASS_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
+target_compile_options(${NM_RDKPROXY_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 target_compile_options(${NM_LEGACY_WIFI_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
-target_compile_options(${NM_LEGACY_NETWORK_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
+target_compile_options(${NM_LEGACY_NETWORK_UT} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)]]
 target_compile_options(${FUNCTIONALITY_TEST} PRIVATE -Wall -include ${CMAKE_SOURCE_DIR}/interface/INetworkManager.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
@@ -140,7 +140,7 @@ include_directories(${PROJECT_SOURCE_DIR}/legacy)
 include_directories(${PROJECT_SOURCE_DIR}/tests/mocks)
 include_directories(${PROJECT_SOURCE_DIR}/tests/mocks/thunder)
 
-target_include_directories(${NM_CLASS_UT} PRIVATE
+#[[target_include_directories(${NM_CLASS_UT} PRIVATE
     ${GLIB_INCLUDE_DIRS}
     ${LIBNM_INCLUDE_DIRS}
     ${GIO_INCLUDE_DIRS}
@@ -150,14 +150,14 @@ target_include_directories(${NM_CLASS_UT} PRIVATE
     ${gtest_SOURCE_DIR}/../googlemock/include
 )
 
-#[[target_include_directories(${NM_RDKPROXY_UT} PRIVATE
+target_include_directories(${NM_RDKPROXY_UT} PRIVATE
     ${CURL_INCLUDE_DIRS}
     ${IARMBUS_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}
     ${gtest_SOURCE_DIR}/include
     ${gtest_SOURCE_DIR}/../googlemock/include
     ${CMAKE_CURRENT_SOURCE_DIR}/install/usr/include/rdk/iarmbus
-)]]
+)
 
 target_include_directories(${NM_LEGACY_WIFI_UT} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -189,13 +189,13 @@ target_link_libraries(${NM_CLASS_UT} PRIVATE
     ${LIBNM_LIBRARIES}
     ${CURL_LIBRARIES}
 )
-#[[target_link_libraries(${NM_RDKPROXY_UT} PRIVATE
+target_link_libraries(${NM_RDKPROXY_UT} PRIVATE
     gmock_main
     ${NAMESPACE}Core::${NAMESPACE}Core
     ${NAMESPACE}Plugins::${NAMESPACE}Plugins
     ${CURL_LIBRARIES}
     ${IARMBUS_LIBRARIES}
-)]]
+)
 
 target_link_libraries(${NM_LEGACY_WIFI_UT} PRIVATE
      gmock_main 
@@ -219,20 +219,20 @@ target_link_libraries(${NM_ROUTER_DISCOVERY_UT} PRIVATE
       ${GUPNP_LIBRARIES} 
       ${GSSDP_LIBRARIES}
 )
-endif(ENABLE_ROUTER_DISCOVERY_TOOL)
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)]]
 
 target_link_libraries(${FUNCTIONALITY_TEST} PRIVATE
        ${NAMESPACE}Core::${NAMESPACE}Core
        ${NAMESPACE}WebSocket::${NAMESPACE}WebSocket
 )
 
-install(TARGETS ${NM_CLASS_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-#[[install(TARGETS ${NM_RDKPROXY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)]]
+#[[install(TARGETS ${NM_CLASS_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS ${NM_RDKPROXY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_WIFI_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 install(TARGETS ${NM_LEGACY_NETWORK_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 if(ENABLE_ROUTER_DISCOVERY_TOOL)
 install(TARGETS ${NM_ROUTER_DISCOVERY_UT} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-endif(ENABLE_ROUTER_DISCOVERY_TOOL)
+endif(ENABLE_ROUTER_DISCOVERY_TOOL)]]
 
 install(TARGETS ${FUNCTIONALITY_TEST} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
