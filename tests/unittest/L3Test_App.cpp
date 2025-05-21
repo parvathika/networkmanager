@@ -13,7 +13,7 @@ using namespace std;
 
 int main ()
 {
-     
+    sleep(60);
     Core::SystemInfo::SetEnvironment(_T("THUNDER_ACCESS"), (_T("127.0.0.1:9998")));
 
 

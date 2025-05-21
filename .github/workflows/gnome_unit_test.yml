@@ -84,7 +84,12 @@ jobs:
           -DCMAKE_VERBOSE_MAKEFILE=ON
           &&
           cmake --build build/GnomeLibnmNetworkmanager --target install -j8
-
+   
+      - name: Run unit tests for plugin
+        run: >
+          PATH=${{github.workspace}}/install/usr/bin:${PATH}
+          LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
+          l3_tests
           
       - name: Run Thunder/WPEFramework
         run: |
@@ -107,12 +112,6 @@ jobs:
           sleep 3  
  
           echo "WPEFramework is up and running with PID: $WPE_PID"
-         
-      - name: Run unit tests for plugin
-        run: >
-          PATH=${{github.workspace}}/install/usr/bin:${PATH}
-          LD_LIBRARY_PATH=${{github.workspace}}/install/usr/lib:${{github.workspace}}/install/usr/lib/wpeframework/plugins:${LD_LIBRARY_PATH}
-          l3_tests
 
       - name: stop wpeframework
         run: |
